@@ -28,14 +28,19 @@ import org.xml.sax.SAXException;
  * @author Anatoly
  */
 public class XMLGenerator {
-
     public static void save() throws ParserConfigurationException, SAXException, IOException{
         DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document document = documentBuilder.newDocument();
         document.appendChild(document.createElement("data"));
         writeDocument(document);
     }
-    private static void writeDocument(Document document) {
+    public static Document getDocument(String rootName) throws ParserConfigurationException{
+        DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document document = documentBuilder.newDocument();
+        document.appendChild(document.createElement(rootName));
+        return document;
+    }
+    public static void writeDocument(Document document) {
         try {
             Transformer tr = TransformerFactory.newInstance().newTransformer();
             DOMSource source = new DOMSource(document);
@@ -46,8 +51,4 @@ public class XMLGenerator {
             e.printStackTrace(System.out);
         }
     }
-    public static void main(String[] args) {
-        // TODO code application logic here
-    }
-    
 }

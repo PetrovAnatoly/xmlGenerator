@@ -7,6 +7,7 @@ package xmlgenerator;
 
 import java.util.Random;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -17,6 +18,7 @@ import org.w3c.dom.Element;
  */
 public class SubTree {
     //constructors
+    private static int counter = 0;
     public SubTree(int minDepth, int maxDepth, int minBranch, int maxBranch){
         
         boolean hasChilds = getRandInt(minDepth, maxDepth) != 0;
@@ -27,25 +29,51 @@ public class SubTree {
                 childNodes.add(child);
             }
         }
-        tag = "tratata";
+        tag = "tag" + String.valueOf(counter);
+        counter++;
     }
-    public void setAttributes(int minAttr, int maxAttr, String attrNameRegularExpr){
+
+    public SubTree() {
+        tag = "root";
+    }
+    public SubTree(String rootTag){
+        tag = rootTag;
+    }
+    
+    public void setAttributes(int minAttr, int maxAttr/*, String attrNameRegularExpr, String attrValueRegularExpr*/){
         int attrCount = getRandInt(minAttr, maxAttr);
         for (int i=0; i < attrCount; i++){
-            String attribute = getStringByRegularExpression(attrNameRegularExpr);
-            attributes.add(attribute);
+            //String attribute = getStringByRegularExpression(attrNameRegularExpr);
+            //String value = getStringByRegularExpression(attrValueRegularExpr);
+            attributes.put("attr"+String.valueOf(i), "val"+String.valueOf(i));
         }
-        for (int i=0; i < childNodes.size(); i++){
-            childNodes.get(i).setAttributes(minAttr, maxAttr, attrNameRegularExpr);
+        for (SubTree childNode : childNodes) {
+            childNode.setAttributes(minAttr, maxAttr/*, String attrNameRegularExpr, String attrValueRegularExpr*/);
         }
     }
     //fields
     private String tag = new String();
     private String textContent = new String();
     private ArrayList<SubTree> childNodes = new ArrayList<>();
-    private ArrayList<String> attributes = new ArrayList<>();
+    private HashMap<String, String> attributes = new HashMap<>();
     
     //methods
+    public void addChild(SubTree chld) {
+        childNodes.add(chld);
+    }
+    public void removeChild(SubTree chld) { childNodes.remove(chld);}
+    public void fill(int minDepth, int maxDepth, int minBranch, int maxBranch){
+        boolean hasChilds = getRandInt(minDepth, maxDepth) != 0;
+        if (hasChilds){
+            int childCount = getRandInt(minBranch, maxBranch);
+            for (int i=0; i < childCount; i++){
+                SubTree child = new SubTree("tag" + String.valueOf(counter));
+                counter++;
+                child.fill(minDepth>0 ? minDepth-1:0, maxDepth-1, minBranch, maxBranch);
+                childNodes.add(child);
+            }
+        }
+    }
     private int getRandInt(int from, int to){
         return from + (new Random()).nextInt(to-from+1);
     }
@@ -66,12 +94,33 @@ public class SubTree {
     }
     public static void main(String[] argv){
         SubTree test = new SubTree(1,4,1,4);
-        test.setAttributes(1, 3, "dfvc");
+        test.setAttributes(1, 3);
         test.showAsTree();
     }
-    public Document toXML() throws ParserConfigurationException{
+    public Document toDocument() throws ParserConfigurationException{
         Document document = XMLGenerator.getDocument("root");
         Element root = document.getDocumentElement();
+        insertIntoElement(document, root);
         return document;
     }
+    private void insertIntoElement(Document document, Element element){
+        Element newElem = document.createElement(tag);
+        for (String key: attributes.keySet()){
+            newElem.setAttribute(key, attributes.get(key));
+        }
+        newElem.setTextContent(textContent);
+        element.appendChild(newElem);
+        for (SubTree childNode : childNodes) {
+            childNode.insertIntoElement(document, newElem);
+        }
+    }
+
+    public ArrayList<SubTree> getChildNodes() { return childNodes;}
+    public String getTag() { return tag;}
+    public String getTextContent(){ return textContent;}
+
+    public String getAttributes() {
+        return attributes.toString();
+    }
+    
 }
