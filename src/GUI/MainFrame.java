@@ -5,8 +5,11 @@
  */
 package GUI;
 
+import GUI.Models.AttributesTableModel;
 import GUI.Models.MyTreeNode;
+import GUI.Models.TagsTableModel;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTree;
@@ -66,13 +69,23 @@ public class MainFrame extends javax.swing.JFrame {
         removeButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         selectedNodeTextPane = new javax.swing.JTextPane();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        imperativeAttributesTable = new javax.swing.JTable();
+        attrPlusButton = new javax.swing.JButton();
+        attrMinusButton = new javax.swing.JButton();
+        jLabel9 = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        imperativeTagsTable = new javax.swing.JTable();
+        jLabel10 = new javax.swing.JLabel();
+        tagMinusButton = new javax.swing.JButton();
+        tagPlusButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel1.setText("XML Generator");
 
-        jLabel2.setText("Глубина:");
+        jLabel2.setText("Глубина случайных тегов:");
 
         jLabel4.setText("–");
 
@@ -83,7 +96,7 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setText("Ветвистость:");
+        jLabel3.setText("Количество случайных тегов на уровень:");
 
         branchMinField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -93,7 +106,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         jLabel5.setText("–");
 
-        jLabel6.setText("Количество атрибутов:");
+        jLabel6.setText("Количество случайных атрибутов:");
 
         jLabel7.setText("–");
 
@@ -143,6 +156,44 @@ public class MainFrame extends javax.swing.JFrame {
 
         jScrollPane2.setViewportView(selectedNodeTextPane);
 
+        imperativeAttributesTable.setModel(myAtrributeTableModel);
+        jScrollPane3.setViewportView(imperativeAttributesTable);
+
+        attrPlusButton.setText("+");
+        attrPlusButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                attrPlusButtonActionPerformed(evt);
+            }
+        });
+
+        attrMinusButton.setText("-");
+        attrMinusButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                attrMinusButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel9.setText("Обязательные атрибуты:");
+
+        imperativeTagsTable.setModel(myTagsTableModel);
+        jScrollPane4.setViewportView(imperativeTagsTable);
+
+        jLabel10.setText("Обязательные теги:");
+
+        tagMinusButton.setText("-");
+        tagMinusButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tagMinusButtonActionPerformed(evt);
+            }
+        });
+
+        tagPlusButton.setText("+");
+        tagPlusButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tagPlusButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -150,67 +201,96 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(saveButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(265, 265, 265)
-                                .addComponent(jButton1))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(80, 80, 80)
-                                        .addComponent(jLabel2)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(depthMinField, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel4)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(depthMaxField, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel3)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(branchMinField, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabel1)
-                                        .addGap(0, 0, Short.MAX_VALUE)))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(branchMaxField, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(saveButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(removeButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cutButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(copyButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
                             .addComponent(pasteButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 18, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(jLabel8)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(attrPlusButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(attrMinusButton))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGap(18, 18, 18)
                                 .addComponent(attributeMaxField, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel7)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(attributeMinField, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap())))))
+                                .addComponent(attributeMinField, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jButton1)
+                                .addGap(97, 97, 97))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(depthMinField, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(depthMaxField, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(branchMinField, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(branchMaxField, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel10)
+                                .addGap(246, 246, 246))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addComponent(tagPlusButton)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(tagMinusButton))
+                                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                                .addGap(10, 10, 10)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel9)
+                                .addGap(0, 209, Short.MAX_VALUE))
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel1)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                .addGap(8, 8, 8)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
+                        .addGap(13, 13, 13)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(removeButton)
+                        .addGap(7, 7, 7)
+                        .addComponent(copyButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cutButton))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
@@ -226,29 +306,33 @@ public class MainFrame extends javax.swing.JFrame {
                             .addComponent(jLabel6)
                             .addComponent(jLabel7)
                             .addComponent(attributeMinField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(attributeMaxField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(removeButton)
-                .addGap(7, 7, 7)
-                .addComponent(copyButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cutButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(saveButton)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addComponent(attributeMaxField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(28, 28, 28)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel8)
-                            .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(pasteButton))
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel10))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton1)
-                        .addGap(6, 6, 6))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE))
+                        .addGap(15, 15, 15)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(attrMinusButton)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(attrPlusButton)
+                                .addComponent(tagMinusButton)
+                                .addComponent(tagPlusButton)))
+                        .addGap(54, 54, 54)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pasteButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(saveButton))
+                .addContainerGap())
         );
 
         pack();
@@ -282,10 +366,58 @@ public class MainFrame extends javax.swing.JFrame {
         int attrMax = Integer.valueOf(attributeMaxField.getText());
         int attrMin = Integer.valueOf(attributeMinField.getText());
         String rootName = nameTextField.getText();
+        HashMap<Integer,HashMap<String, String>> attributesInLevel = new HashMap<>();
+        HashMap<String, String> attributesInAllLevels = new HashMap<>();
+        for (int i = 0; i < imperativeAttributesTable.getRowCount(); i++){
+            String attrName = (String) imperativeAttributesTable.getValueAt(i, 0);
+            String attrValue = (String) imperativeAttributesTable.getValueAt(i, 1);
+            String levels = (String) imperativeAttributesTable.getValueAt(i, 2);
+            if (levels == null || levels.equals("all") || levels.trim().equals(""))
+                attributesInAllLevels.put(attrName, attrValue);
+            else{
+                String[] levelsArray = levels.split(",");
+                for (String lvlStr: levelsArray){
+                    Integer lvl = Integer.valueOf(lvlStr.trim());
+                    HashMap<String, String> attrInThisLevel;
+                    if (attributesInLevel.containsKey(lvl))
+                        attrInThisLevel = attributesInLevel.get(lvl);
+                    else{
+                        attrInThisLevel = new HashMap<>();
+                        attributesInLevel.put(lvl, attrInThisLevel);
+                    }
+                    attrInThisLevel.put(attrName, attrValue);
+                }
+            }
+        }
+        HashMap<Integer, HashMap<String, String[]>> tagsInLevels = new HashMap<>();
+        HashMap<String, String[]> tagsInAllLevels = new HashMap<>();
+        for (int i = 0; i < imperativeTagsTable.getRowCount(); i++){
+            String tagName = (String) imperativeTagsTable.getValueAt(i, 0);
+            String amountInLevelStr = (String) imperativeTagsTable.getValueAt(i, 1);
+            String[] amountInLevelArray = amountInLevelStr.split(",");
+            String levelsStr = (String) imperativeTagsTable.getValueAt(i, 2);
+            if (levelsStr == null || levelsStr.equals("all") || levelsStr.trim().equals(""))
+                tagsInAllLevels.put(tagName,amountInLevelArray);
+            else{
+                String[] levelsArray = levelsStr.split(",");
+                ArrayList<Integer> levelsOfTag = XMLGenerator.getIntegers(levelsArray);
+                for (Integer lvl: levelsOfTag){
+                    HashMap<String, String[]> tagsInThisLevel;
+                    if (tagsInLevels.containsKey(lvl))
+                        tagsInThisLevel = tagsInLevels.get(lvl);
+                    else{
+                        tagsInThisLevel = new HashMap<>();
+                        tagsInLevels.put(lvl, tagsInThisLevel);
+                    }
+                    tagsInThisLevel.put(tagName, amountInLevelArray);
+                }
+            }
+        }
         SubTree xmlTree = new SubTree(rootName);
-        xmlTree.fill(minDepth, maxDepth, minDepth, maxDepth);
-        xmlTree.setAttributes(attrMax, attrMin);
-        
+        xmlTree.fill(minDepth, maxDepth, branchMin, branchMax);
+        xmlTree.setImperativeTags(tagsInLevels, tagsInAllLevels);
+        xmlTree.setIncidentalAttributes(attrMax, attrMin);
+        xmlTree.setImperativeAttributes(attributesInLevel, attributesInAllLevels);
         root.addChild(xmlTree);
         updateTree();
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -411,6 +543,32 @@ public class MainFrame extends javax.swing.JFrame {
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_saveButtonActionPerformed
+
+    private final AttributesTableModel myAtrributeTableModel = new AttributesTableModel();
+    private final TagsTableModel myTagsTableModel = new TagsTableModel();
+    private void attrPlusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_attrPlusButtonActionPerformed
+        // TODO add your handling code here:
+        myAtrributeTableModel.addRow();
+    }//GEN-LAST:event_attrPlusButtonActionPerformed
+
+    private void attrMinusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_attrMinusButtonActionPerformed
+        // TODO add your handling code here:
+        int rowIndex = imperativeAttributesTable.getSelectedRow();
+        if (rowIndex > -1)
+            myAtrributeTableModel.removeRow(rowIndex);
+    }//GEN-LAST:event_attrMinusButtonActionPerformed
+
+    private void tagPlusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tagPlusButtonActionPerformed
+        // TODO add your handling code here:
+        myTagsTableModel.addRow();
+    }//GEN-LAST:event_tagPlusButtonActionPerformed
+
+    private void tagMinusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tagMinusButtonActionPerformed
+        // TODO add your handling code here:
+        int rowIndex = imperativeTagsTable.getSelectedRow();
+        if (rowIndex > -1)
+            myTagsTableModel.removeRow(rowIndex);
+    }//GEN-LAST:event_tagMinusButtonActionPerformed
     
     private SubTree root = new SubTree();
     private MyTreeNode jTreeRoot= new MyTreeNode();
@@ -468,6 +626,8 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton attrMinusButton;
+    private javax.swing.JButton attrPlusButton;
     private javax.swing.JTextField attributeMaxField;
     private javax.swing.JTextField attributeMinField;
     private javax.swing.JTextField branchMaxField;
@@ -476,8 +636,11 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton cutButton;
     private javax.swing.JTextField depthMaxField;
     private javax.swing.JTextField depthMinField;
+    private javax.swing.JTable imperativeAttributesTable;
+    private javax.swing.JTable imperativeTagsTable;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -485,13 +648,18 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTree jTree1;
     private javax.swing.JTextField nameTextField;
     private javax.swing.JButton pasteButton;
     private javax.swing.JButton removeButton;
     private javax.swing.JButton saveButton;
     private javax.swing.JTextPane selectedNodeTextPane;
+    private javax.swing.JButton tagMinusButton;
+    private javax.swing.JButton tagPlusButton;
     // End of variables declaration//GEN-END:variables
 }
