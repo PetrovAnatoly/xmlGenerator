@@ -8,6 +8,7 @@ package xmlgenerator;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -20,6 +21,8 @@ public class SubTree {
     //constructors
     private static int counter = 0;
     private int minD, maxD, minB, maxB;
+    private int globalMaxDepth;
+    public void setGlobalMaximunDepth(int i){ globalMaxDepth = i;}
     public SubTree(int minDepth, int maxDepth, int minBranch, int maxBranch){
         minD = minDepth; maxD = maxDepth; minB = minBranch; maxB = maxBranch;
         boolean hasChilds = getRandInt(minDepth, maxDepth) != 0;
@@ -51,30 +54,54 @@ public class SubTree {
             childNode.setIncidentalAttributes(minAttr, maxAttr/*, String attrNameRegularExpr, String attrValueRegularExpr*/);
         }
     }
-    public void setImperativeAttributes(HashMap<Integer,HashMap<String, String>> attributesInLevel, HashMap<String, String> attributesInAllLevel){
-        setAttributesAtAllLevels(attributesInAllLevel);
+    public void setImperativeAttributes(HashMap<Integer,HashMap<String, String>> attributesInLevel, 
+            HashMap<String, String> attributesInAllLevel, 
+            HashMap<String, HashMap<String, String>> attributesOfTags){
+        SetAttributesOfTags(attributesOfTags);
         setAttributesAtLevels(attributesInLevel);
+        setAttributesAtAllLevels(attributesInAllLevel);
     }
-    public void setAttributesAtAllLevels(HashMap<String, String> attributesInAllLevel){
-        attributes.putAll(attributesInAllLevel);
+    public void SetAttributesOfTags(HashMap<String, HashMap<String, String>> attributesOfTags){
+        HashMap<String, String> attributesOfThisTag = attributesOfTags.get(tag);
+        if (attributesOfThisTag!=null)
+            for (String attribute: attributesOfThisTag.keySet())
+                if (!attributes.containsKey(attribute))
+                    attributes.put(attribute, attributesOfThisTag.get(attribute));
         for (SubTree child: childNodes)
-            child.setAttributesAtAllLevels(attributesInAllLevel);
+            child.SetAttributesOfTags(attributesOfTags);
     }
     private static int levelCounter = 0;
     public void setAttributesAtLevels(HashMap<Integer,HashMap<String, String>> attributesInLevel){
         HashMap<String, String> attributesInThisLevel = attributesInLevel.get(levelCounter);
         if (attributesInThisLevel!= null)
-            attributes.putAll(attributesInThisLevel);
+            for (String attribute: attributesInThisLevel.keySet())
+                if (!attributes.containsKey(attribute))
+                    attributes.put(attribute, attributesInThisLevel.get(attribute));
         levelCounter++;
         for (SubTree child: childNodes)
             child.setAttributesAtLevels(attributesInLevel);
         levelCounter--;
     }
-    public void setImperativeTags(HashMap<Integer,HashMap<String, String[]>> tagsInLevel, HashMap<String, String[]> tagsInAllLevel){
-        setTagsAtLevels(tagsInLevel);
-        setTagsAtAllLevels(tagsInAllLevel);
+    public void setAttributesAtAllLevels(HashMap<String, String> attributesInAllLevel){
+        if (attributesInAllLevel!=null)
+            for (String attribute: attributesInAllLevel.keySet())
+                if (!attributes.containsKey(attribute))
+                    attributes.put(attribute, attributesInAllLevel.get(attribute));
+        for (SubTree child: childNodes)
+            child.setAttributesAtAllLevels(attributesInAllLevel);
     }
-    public void setTagsAtAllLevels(HashMap<String, String[]> tagsInAllLevel){
+    public void setImperativeTags(HashMap<Integer,HashMap<String, String[]>> tagsInLevel, 
+            HashMap<String, String[]> tagsInAllLevel,
+            HashMap<String, HashMap<String, String[]>> tagsofParentTags){
+        int maxImperativeLevel = 0;
+        for (int i : tagsInLevel.keySet()) { 
+            if (i>maxImperativeLevel)
+                maxImperativeLevel=i;
+        }
+        setTagsAtLevels(tagsInLevel, tagsInAllLevel, tagsofParentTags,maxImperativeLevel);
+        //setTagsAtAllLevels(tagsInAllLevel);
+    }
+    /*public void setTagsAtAllLevels(HashMap<String, String[]> tagsInAllLevel){
         if (childNodes.isEmpty()) return;
         ArrayList<SubTree> newTagsAtThisLevel = new ArrayList<>();
         for (String thisTag: tagsInAllLevel.keySet()){
@@ -89,26 +116,82 @@ public class SubTree {
         for (SubTree child: childNodes)
             child.setTagsAtAllLevels(tagsInAllLevel);
         childNodes.addAll(newTagsAtThisLevel);
-    }
-    public void setTagsAtLevels(HashMap<Integer,HashMap<String, String[]>> tagsInLevel){
+    }*/
+    public void setTagsAtLevels(HashMap<Integer,HashMap<String, String[]>> tagsInLevel,
+            HashMap<String, String[]> tagsInAllLevel, 
+            HashMap<String, HashMap<String, String[]>> tagsofParentTags,
+            int maxImperativeLevel){
         levelCounter++;
+        if (globalMaxDepth == 0){
+            levelCounter--;
+            return;
+        }
         HashMap<String, String[]> tagsInThisLevel = tagsInLevel.get(levelCounter);
-        ArrayList<SubTree> newTagsAtThisLevel = new ArrayList<>();
+        HashMap<String, String[]> tagsInThisParentTag = tagsofParentTags.get(tag);
+        ArrayList<SubTree> newTagsAtThisParentTag = new ArrayList<>();
         if (!(tagsInThisLevel==null || tagsInThisLevel.isEmpty())){
             for (String thisTag: tagsInThisLevel.keySet()){
                 int numOfThisTag = XMLGenerator.getRandomInt(tagsInThisLevel.get(thisTag));
-                newTagsAtThisLevel.addAll(makeNodesWithThisString(thisTag, numOfThisTag));
-            }
-            for (SubTree newTag: newTagsAtThisLevel){
-                if (maxD!=0)
-                    newTag.fill(minD>0 ? minD-1:0, maxD-1, minB, maxB);
-                newTag.setTagsAtLevels(tagsInLevel);
+                newTagsAtThisParentTag.addAll(makeNodesWithThisString(thisTag, numOfThisTag));
             }
         }
+        if (!(tagsInThisParentTag == null || tagsInThisParentTag.isEmpty())){
+            for (String thisTag: tagsInThisParentTag.keySet()){
+                int numOfThisTag = XMLGenerator.getRandomInt(tagsInThisParentTag.get(thisTag));
+                newTagsAtThisParentTag.addAll(makeNodesWithThisString(thisTag, numOfThisTag));
+            }
+        }
+        if (!(newTagsAtThisParentTag.isEmpty() && childNodes.isEmpty())){
+            for (String thisTag: tagsInAllLevel.keySet()){
+                int numOfThisTag = XMLGenerator.getRandomInt(tagsInAllLevel.get(thisTag));
+                newTagsAtThisParentTag.addAll(makeNodesWithThisString(thisTag, numOfThisTag));
+            }
+        }
+        else{
+            if (maxImperativeLevel>=levelCounter)
+                for (String thisTag: tagsInAllLevel.keySet()){
+                    int numOfThisTag = XMLGenerator.getRandomInt(tagsInAllLevel.get(thisTag));
+                    newTagsAtThisParentTag.addAll(makeNodesWithThisString(thisTag, numOfThisTag));
+                }
+        }
+        for (SubTree newTag: newTagsAtThisParentTag){
+            newTag.globalMaxDepth = globalMaxDepth-1;
+            if (maxD!=0)
+                newTag.fill(minD>0 ? minD-1:0, maxD-1, minB, maxB);
+            newTag.setTagsAtLevels(tagsInLevel, tagsInAllLevel, tagsofParentTags, maxImperativeLevel);
+        }
         for (SubTree child: childNodes)
-            child.setTagsAtLevels(tagsInLevel);
-        childNodes.addAll(newTagsAtThisLevel);
+            child.setTagsAtLevels(tagsInLevel, tagsInAllLevel, tagsofParentTags, maxImperativeLevel);
+        childNodes.addAll(newTagsAtThisParentTag);
         levelCounter--;
+    }
+    
+    //последовательность добавления: 
+    // 1.для тегов (в порядке строк таблицы)
+    // 2. для уровней (-//-)
+    // 3. содержимое для всех вершин (-//-)
+    public void setTextContent(HashMap<Integer, ArrayList<String>> textContentInLevels, ArrayList<String> textContentInAllLevels, HashMap<String, ArrayList<String>> textContentInTags) {
+        ArrayList<String> contentOfThisNode = new ArrayList<>();
+        ArrayList<String> contentOfThisNodeTag = textContentInTags.get(tag);
+        ArrayList<String> contentOfThisNodeLevel = textContentInLevels.get(levelCounter);
+        if (contentOfThisNodeTag != null)
+            contentOfThisNode = copyWithoutRepeat(contentOfThisNode, contentOfThisNodeTag);
+        if (contentOfThisNodeLevel != null)
+            contentOfThisNode = copyWithoutRepeat(contentOfThisNode, contentOfThisNodeLevel);
+        if (textContentInAllLevels != null)
+            contentOfThisNode = copyWithoutRepeat(contentOfThisNode, textContentInAllLevels);
+        for (String atomContent: contentOfThisNode)
+            textContent+=atomContent;
+        levelCounter++;
+        for (SubTree child: childNodes)
+            child.setTextContent(textContentInLevels, textContentInAllLevels, textContentInTags);
+        levelCounter--;
+    }
+    private static ArrayList<String> copyWithoutRepeat(ArrayList<String> to, ArrayList<String> from){
+        for (String s: from)
+            if (!to.contains(s))
+                to.add(s);
+        return to;
     }
     private static ArrayList<SubTree> makeNodesWithThisString(String str, int num){
         ArrayList<SubTree> rtrn = new ArrayList<>();
@@ -134,6 +217,9 @@ public class SubTree {
             int childCount = getRandInt(minBranch, maxBranch);
             for (int i=0; i < childCount; i++){
                 SubTree child = new SubTree("tag" + String.valueOf(counter));
+                if (globalMaxDepth == 0)
+                    break;
+                child.globalMaxDepth = globalMaxDepth - 1;
                 counter++;
                 child.fill(minDepth>0 ? minDepth-1:0, maxDepth-1, minBranch, maxBranch);
                 childNodes.add(child);
@@ -189,4 +275,15 @@ public class SubTree {
     public String getAttributes() {
         return attributes.toString();
     }
+
+    public SubTree getCopy() {
+        SubTree rtrn = new SubTree(tag);
+        rtrn.attributes = (HashMap<String, String>) attributes.clone();
+        rtrn.textContent = this.textContent;
+        for (SubTree child: childNodes)
+            rtrn.addChild(child.getCopy());
+        return rtrn;
+    }
+
+    
 }

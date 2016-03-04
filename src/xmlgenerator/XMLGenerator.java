@@ -41,23 +41,37 @@ public class XMLGenerator {
         document.appendChild(document.createElement(rootName));
         return document;
     }
+    
+    private static ArrayList<String> foundTags = new ArrayList<>();
     public static ArrayList<Integer> getIntegers(String[] intervalsAndPoints){
+        foundTags = new ArrayList<>();
         ArrayList<Integer> rtrn = new ArrayList<>();
         for (String s: intervalsAndPoints){
             if (s.contains("-")){
                 String rightStr = s.substring(s.indexOf("-")+1);
                 String leftStr = s.replace("-"+rightStr, "");
-                Integer left = Integer.valueOf(leftStr.trim());
-                Integer right = Integer.valueOf(rightStr.trim());
-                for (int i = left; i<=right; i++)
-                    rtrn.add(i);
+                Integer left, right;
+                try{
+                    left = Integer.valueOf(leftStr.trim());
+                    right = Integer.valueOf(rightStr.trim());
+                    for (int i = left; i<=right; i++)
+                        rtrn.add(i);
+                }
+                catch(NumberFormatException exc){foundTags.add(s.trim());}
             }
-            else
-                rtrn.add(Integer.valueOf(s.trim()));
+            else{
+                try{
+                    Integer lvl = Integer.valueOf(s.trim());
+                    rtrn.add(lvl);
+                }
+                catch(NumberFormatException exc){foundTags.add(s.trim());}
+            }
         }
         return rtrn;
     }
-    
+    public static ArrayList<String> getTagsInLastGetIntegerCalling(){
+        return foundTags;
+    }
     private static int getRandInt(int from, int to){
         return from + (new Random()).nextInt(to-from+1);
     }

@@ -15,7 +15,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class AttributesTableModel extends DefaultTableModel{
     public AttributesTableModel(){ setColumnIdentifiers(headers);}
-    private static final Object[] headers = {"name", "value", "levels"};
+    private static final Object[] headers = {"name", "value", "levels/tags"};
     private static final Object[] rowData = {"","",""};
     public void addRow(){ this.addRow(rowData);}
 }

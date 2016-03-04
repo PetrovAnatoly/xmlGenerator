@@ -6,8 +6,9 @@
 package GUI;
 
 import GUI.Models.AttributesTableModel;
-import GUI.Models.MyTreeNode;
+import GUI.Models.MyTagsTreeNode;
 import GUI.Models.TagsTableModel;
+import GUI.Models.TextContentTableModel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -66,7 +67,7 @@ public class MainFrame extends javax.swing.JFrame {
         copyButton = new javax.swing.JButton();
         cutButton = new javax.swing.JButton();
         pasteButton = new javax.swing.JButton();
-        removeButton = new javax.swing.JButton();
+        removeSubTreeButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         selectedNodeTextPane = new javax.swing.JTextPane();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -79,6 +80,17 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         tagMinusButton = new javax.swing.JButton();
         tagPlusButton = new javax.swing.JButton();
+        removeTagButton = new javax.swing.JButton();
+        jLabel11 = new javax.swing.JLabel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        textContentTable = new javax.swing.JTable();
+        jLabel12 = new javax.swing.JLabel();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        jTree2 = new javax.swing.JTree();
+        contentMinusButton = new javax.swing.JButton();
+        contentPlusButton = new javax.swing.JButton();
+        maximalDepthFileld = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -96,7 +108,7 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setText("Количество случайных тегов на уровень:");
+        jLabel3.setText("Кол-во случайных тегов на уровень:");
 
         branchMinField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -147,10 +159,10 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        removeButton.setText("Удалить");
-        removeButton.addActionListener(new java.awt.event.ActionListener() {
+        removeSubTreeButton.setText("Поддерево");
+        removeSubTreeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                removeButtonActionPerformed(evt);
+                removeSubTreeButtonActionPerformed(evt);
             }
         });
 
@@ -194,6 +206,38 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        removeTagButton.setText("Тег");
+        removeTagButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeTagButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel11.setText("Удалить:");
+
+        textContentTable.setModel(myTextContentTableModel);
+        jScrollPane5.setViewportView(textContentTable);
+
+        jLabel12.setText("Содержимое:");
+
+        jScrollPane6.setViewportView(jTree2);
+
+        contentMinusButton.setText("-");
+        contentMinusButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                contentMinusButtonActionPerformed(evt);
+            }
+        });
+
+        contentPlusButton.setText("+");
+        contentPlusButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                contentPlusButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel13.setText("Максимальная глубина:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -201,77 +245,104 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(saveButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(removeButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cutButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(copyButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
-                            .addComponent(pasteButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel8)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(attrPlusButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(attrMinusButton))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel6)
-                                .addGap(18, 18, 18)
-                                .addComponent(attributeMaxField, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(attributeMinField, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jButton1)
-                                .addGap(97, 97, 97))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(depthMinField, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(depthMaxField, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(branchMinField, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(branchMaxField, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel10)
-                                .addGap(246, 246, 246))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(0, 0, Short.MAX_VALUE)
-                                        .addComponent(tagPlusButton)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(tagMinusButton))
-                                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                                .addGap(10, 10, 10)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel9)
-                                .addGap(0, 209, Short.MAX_VALUE))
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addComponent(jLabel11)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(removeSubTreeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(removeTagButton)))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(saveButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(cutButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(copyButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+                                .addComponent(pasteButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel12)
+                                                .addGap(0, 0, Short.MAX_VALUE))
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addGap(0, 133, Short.MAX_VALUE)
+                                                .addComponent(contentPlusButton)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(contentMinusButton))
+                                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                                        .addGap(4, 4, 4)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                        .addGap(0, 0, Short.MAX_VALUE)
+                                                        .addComponent(tagPlusButton)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(tagMinusButton))
+                                                    .addGroup(layout.createSequentialGroup()
+                                                        .addComponent(jLabel10)
+                                                        .addGap(0, 96, Short.MAX_VALUE))
+                                                    .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(jLabel9)
+                                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addComponent(attrPlusButton)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(attrMinusButton))))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addGap(0, 49, Short.MAX_VALUE)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addComponent(jLabel2)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(depthMinField, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jLabel4)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(depthMaxField, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jLabel3)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(branchMinField, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jLabel5)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(branchMaxField, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                    .addGroup(layout.createSequentialGroup()
+                                                        .addComponent(jLabel6)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(attributeMaxField, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(jLabel7))
+                                                    .addComponent(jLabel13))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                    .addComponent(maximalDepthFileld, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
+                                                    .addComponent(attributeMinField)))))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(jLabel8)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING))))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -282,13 +353,19 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGap(8, 8, 8)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
-                        .addGap(13, 13, 13)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(removeButton)
-                        .addGap(7, 7, 7)
-                        .addComponent(copyButton)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
+                                .addGap(13, 13, 13)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(removeSubTreeButton)
+                                    .addComponent(removeTagButton)
+                                    .addComponent(jLabel11))
+                                .addGap(7, 7, 7)
+                                .addComponent(copyButton))
+                            .addComponent(jScrollPane6))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(cutButton))
                     .addGroup(layout.createSequentialGroup()
@@ -307,12 +384,18 @@ public class MainFrame extends javax.swing.JFrame {
                             .addComponent(jLabel7)
                             .addComponent(attributeMinField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(attributeMaxField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(28, 28, 28)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(maximalDepthFileld, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel13))
+                        .addGap(2, 2, 2)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel10)
                             .addComponent(jLabel9)
-                            .addComponent(jLabel10))
+                            .addComponent(jLabel12))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                             .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE))
                         .addGap(15, 15, 15)
@@ -321,7 +404,9 @@ public class MainFrame extends javax.swing.JFrame {
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(attrPlusButton)
                                 .addComponent(tagMinusButton)
-                                .addComponent(tagPlusButton)))
+                                .addComponent(tagPlusButton)
+                                .addComponent(contentMinusButton)
+                                .addComponent(contentPlusButton)))
                         .addGap(54, 54, 54)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -353,31 +438,36 @@ public class MainFrame extends javax.swing.JFrame {
             errDialog.setVisible(true);
             return;
         }
-        System.out.println(depthMaxField.getText());
-        System.out.println(depthMinField.getText());
-        System.out.println(branchMaxField.getText());
-        System.out.println(branchMinField.getText());
-        System.out.println(attributeMaxField.getText());
-        System.out.println(attributeMinField.getText());
-        int maxDepth = Integer.valueOf(depthMaxField.getText());
-        int minDepth = Integer.valueOf(depthMinField.getText());
-        int branchMax = Integer.valueOf(branchMaxField.getText());
-        int branchMin = Integer.valueOf(branchMinField.getText());
-        int attrMax = Integer.valueOf(attributeMaxField.getText());
-        int attrMin = Integer.valueOf(attributeMinField.getText());
+        int maxDepth, minDepth, branchMax, branchMin, attrMax, attrMin, globalMaxDepth;
+        try{minDepth = Integer.valueOf( depthMinField.getText().trim());}
+        catch(NumberFormatException exc){ minDepth = 0;}
+        try{maxDepth = Integer.valueOf( depthMaxField.getText().trim());}
+        catch(NumberFormatException exc){ maxDepth = minDepth;}
+        try{branchMin = Integer.valueOf( branchMinField.getText().trim());}
+        catch(NumberFormatException exc){ branchMin = 0;}
+        try{branchMax = Integer.valueOf( branchMaxField.getText().trim());}
+        catch(NumberFormatException exc){ branchMax = branchMin;}
+        try{attrMin = Integer.valueOf(attributeMinField.getText().trim());}
+        catch(NumberFormatException exc){ attrMin = 0;}
+        try{attrMax = Integer.valueOf( attributeMaxField.getText().trim());}
+        catch(NumberFormatException exc){ attrMax = attrMin;}
+        try{globalMaxDepth = Integer.valueOf( maximalDepthFileld.getText().trim());}
+        catch(NumberFormatException exc){globalMaxDepth = Integer.MAX_VALUE;}
         String rootName = nameTextField.getText();
         HashMap<Integer,HashMap<String, String>> attributesInLevel = new HashMap<>();
+        HashMap<String, HashMap<String, String>> attributesOfTags = new HashMap<>();
         HashMap<String, String> attributesInAllLevels = new HashMap<>();
         for (int i = 0; i < imperativeAttributesTable.getRowCount(); i++){
             String attrName = (String) imperativeAttributesTable.getValueAt(i, 0);
             String attrValue = (String) imperativeAttributesTable.getValueAt(i, 1);
-            String levels = (String) imperativeAttributesTable.getValueAt(i, 2);
-            if (levels == null || levels.equals("all") || levels.trim().equals(""))
+            String levelsAndtags = (String) imperativeAttributesTable.getValueAt(i, 2);
+            if (levelsAndtags.equals("all") || levelsAndtags.trim().equals(""))
                 attributesInAllLevels.put(attrName, attrValue);
             else{
-                String[] levelsArray = levels.split(",");
-                for (String lvlStr: levelsArray){
-                    Integer lvl = Integer.valueOf(lvlStr.trim());
+                String[] levelsIntervalsAndPoints = levelsAndtags.split(",");
+                ArrayList<Integer> levelsArray = XMLGenerator.getIntegers(levelsIntervalsAndPoints);
+                ArrayList<String> tagsArray = XMLGenerator.getTagsInLastGetIntegerCalling();
+                for (Integer lvl: levelsArray){
                     HashMap<String, String> attrInThisLevel;
                     if (attributesInLevel.containsKey(lvl))
                         attrInThisLevel = attributesInLevel.get(lvl);
@@ -387,20 +477,32 @@ public class MainFrame extends javax.swing.JFrame {
                     }
                     attrInThisLevel.put(attrName, attrValue);
                 }
+                for (String tag: tagsArray){
+                    HashMap<String, String> attrOfThisTag;
+                    if (attributesOfTags.containsKey(tag))
+                        attrOfThisTag = attributesOfTags.get(tag);
+                    else{
+                        attrOfThisTag = new HashMap<>();
+                        attributesOfTags.put(tag, attrOfThisTag);
+                    }
+                    attrOfThisTag.put(attrName, attrValue);
+                }
             }
         }
         HashMap<Integer, HashMap<String, String[]>> tagsInLevels = new HashMap<>();
+        HashMap<String, HashMap<String, String[]>> tagsofParentTags = new HashMap<>();
         HashMap<String, String[]> tagsInAllLevels = new HashMap<>();
         for (int i = 0; i < imperativeTagsTable.getRowCount(); i++){
             String tagName = (String) imperativeTagsTable.getValueAt(i, 0);
             String amountInLevelStr = (String) imperativeTagsTable.getValueAt(i, 1);
-            String[] amountInLevelArray = amountInLevelStr.split(",");
-            String levelsStr = (String) imperativeTagsTable.getValueAt(i, 2);
-            if (levelsStr == null || levelsStr.equals("all") || levelsStr.trim().equals(""))
-                tagsInAllLevels.put(tagName,amountInLevelArray);
+            String[] amountArray = amountInLevelStr.split(",");
+            String levelsAndTagsStr = (String) imperativeTagsTable.getValueAt(i, 2);
+            if (levelsAndTagsStr.equals("all") || levelsAndTagsStr.trim().equals(""))
+                tagsInAllLevels.put(tagName,amountArray);
             else{
-                String[] levelsArray = levelsStr.split(",");
+                String[] levelsArray = levelsAndTagsStr.split(",");
                 ArrayList<Integer> levelsOfTag = XMLGenerator.getIntegers(levelsArray);
+                ArrayList<String> parentTagsOfTag = XMLGenerator.getTagsInLastGetIntegerCalling();
                 for (Integer lvl: levelsOfTag){
                     HashMap<String, String[]> tagsInThisLevel;
                     if (tagsInLevels.containsKey(lvl))
@@ -409,36 +511,82 @@ public class MainFrame extends javax.swing.JFrame {
                         tagsInThisLevel = new HashMap<>();
                         tagsInLevels.put(lvl, tagsInThisLevel);
                     }
-                    tagsInThisLevel.put(tagName, amountInLevelArray);
+                    tagsInThisLevel.put(tagName, amountArray);
+                }
+                for (String tag: parentTagsOfTag){
+                    HashMap<String, String[]> tagsOfThisParentTag;
+                    if (tagsofParentTags.containsKey(tag))
+                        tagsOfThisParentTag = tagsofParentTags.get(tag);
+                    else{
+                        tagsOfThisParentTag = new HashMap<>();
+                        tagsofParentTags.put(tag, tagsOfThisParentTag);
+                    }
+                    tagsOfThisParentTag.put(tagName, amountArray);
+                }
+            }
+        }
+        HashMap<Integer, ArrayList<String>> textContentInLevels = new HashMap<>();
+        HashMap<String, ArrayList<String>> textContentInTags = new HashMap<>();
+        ArrayList<String> textContentInAllLevels = new ArrayList<>();
+        for (int i = 0; i < textContentTable.getRowCount(); i++){
+            String levelsOrTagsStr = (String) textContentTable.getValueAt(i, 0);
+            String textContent = (String) textContentTable.getValueAt(i, 1);
+            if (levelsOrTagsStr.equals("all") || levelsOrTagsStr.trim().equals(""))
+                textContentInAllLevels.add(textContent);
+            else{
+                String[] levelsAndTagsArray = levelsOrTagsStr.split(",");
+                ArrayList<Integer> levelsOfTextContent = XMLGenerator.getIntegers(levelsAndTagsArray);
+                ArrayList<String> tagsOfTextContent = XMLGenerator.getTagsInLastGetIntegerCalling();
+                for (Integer lvl: levelsOfTextContent){
+                    ArrayList<String> textContentOfThisLevel;
+                    if (textContentInLevels.containsKey(lvl))
+                        textContentOfThisLevel = textContentInLevels.get(lvl);
+                    else{
+                        textContentOfThisLevel = new ArrayList<>();
+                        textContentInLevels.put(lvl, textContentOfThisLevel);
+                    }
+                    textContentOfThisLevel.add(textContent);
+                }
+                for (String tag: tagsOfTextContent){
+                    ArrayList<String> textContentOfThisTag;
+                    if (textContentInTags.containsKey(tag))
+                        textContentOfThisTag = textContentInTags.get(tag);
+                    else{
+                        textContentOfThisTag = new ArrayList<>();
+                        textContentInTags.put(tag, textContentOfThisTag);
+                    }
+                    textContentOfThisTag.add(textContent);
                 }
             }
         }
         SubTree xmlTree = new SubTree(rootName);
+        xmlTree.setGlobalMaximunDepth(globalMaxDepth);
         xmlTree.fill(minDepth, maxDepth, branchMin, branchMax);
-        xmlTree.setImperativeTags(tagsInLevels, tagsInAllLevels);
+        xmlTree.setImperativeTags(tagsInLevels, tagsInAllLevels, tagsofParentTags);
         xmlTree.setIncidentalAttributes(attrMax, attrMin);
-        xmlTree.setImperativeAttributes(attributesInLevel, attributesInAllLevels);
+        xmlTree.setImperativeAttributes(attributesInLevel, attributesInAllLevels, attributesOfTags);
+        xmlTree.setTextContent(textContentInLevels, textContentInAllLevels, textContentInTags);
         root.addChild(xmlTree);
         updateTree();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
+    private void removeSubTreeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeSubTreeButtonActionPerformed
         // TODO add your handling code here:
         TreeSelectionModel TSM = jTree1.getSelectionModel();
         TreePath TP = TSM.getSelectionPath();
         if (TP == null)  
             return;
-        MyTreeNode TC = (MyTreeNode)TP.getLastPathComponent();
+        MyTagsTreeNode TC = (MyTagsTreeNode)TP.getLastPathComponent();
         SubTree remNode = TC.getAssociatedNode();
         if (remNode == root)
             return;
-        MyTreeNode prnt = (MyTreeNode) TC.getParent();
+        MyTagsTreeNode prnt = (MyTagsTreeNode) TC.getParent();
         SubTree prntNode = prnt.getAssociatedNode();
         prntNode.removeChild(remNode);
         updateTree();
         copyIsPressed = false;
         cutIsPressed = false;
-    }//GEN-LAST:event_removeButtonActionPerformed
+    }//GEN-LAST:event_removeSubTreeButtonActionPerformed
 
     
     private boolean copyIsPressed = false;
@@ -451,7 +599,7 @@ public class MainFrame extends javax.swing.JFrame {
         TreePath TP = TSM.getSelectionPath();
         if (TP == null)  
             return;
-        MyTreeNode TC = (MyTreeNode)TP.getLastPathComponent();
+        MyTagsTreeNode TC = (MyTagsTreeNode)TP.getLastPathComponent();
         SubTree selectedNode = TC.getAssociatedNode();
         if (selectedNode == root){
             copyIsPressed = false;
@@ -459,7 +607,7 @@ public class MainFrame extends javax.swing.JFrame {
             return;
         }
         selectedSubTree = selectedNode;
-        selectedSubTreeParent = ((MyTreeNode)TC.getParent()).getAssociatedNode();
+        selectedSubTreeParent = ((MyTagsTreeNode)TC.getParent()).getAssociatedNode();
         copyIsPressed = true;
         cutIsPressed = false;
     }//GEN-LAST:event_copyButtonActionPerformed
@@ -469,15 +617,16 @@ public class MainFrame extends javax.swing.JFrame {
         TreePath TP = TSM.getSelectionPath();
         if (TP == null)  
             return;
-        MyTreeNode TC = (MyTreeNode)TP.getLastPathComponent();
+        MyTagsTreeNode TC = (MyTagsTreeNode)TP.getLastPathComponent();
         SubTree selectedNode = TC.getAssociatedNode();
         if (selectedNode == root){
-            copyIsPressed = false;
+            copyIsPressed = false; 
             cutIsPressed = false;
             return;
         }
         selectedSubTree = selectedNode;
-        selectedSubTreeParent = ((MyTreeNode)TC.getParent()).getAssociatedNode();
+        selectedSubTree = selectedNode;
+        selectedSubTreeParent = ((MyTagsTreeNode)TC.getParent()).getAssociatedNode();
         copyIsPressed = false;
         cutIsPressed = true;
     }//GEN-LAST:event_cutButtonActionPerformed
@@ -487,10 +636,11 @@ public class MainFrame extends javax.swing.JFrame {
         TreePath TP = TSM.getSelectionPath();
         if (TP == null)
             return;
-        MyTreeNode TC = (MyTreeNode)TP.getLastPathComponent();
+        MyTagsTreeNode TC = (MyTagsTreeNode)TP.getLastPathComponent();
         SubTree selectedNode = TC.getAssociatedNode();
+        SubTree copyOfSelectedSubTree = selectedSubTree.getCopy();
         if (copyIsPressed || cutIsPressed)
-            selectedNode.addChild(selectedSubTree);
+            selectedNode.addChild(copyOfSelectedSubTree);
         if (cutIsPressed)
             selectedSubTreeParent.removeChild(selectedSubTree);
         copyIsPressed = false;
@@ -503,18 +653,20 @@ public class MainFrame extends javax.swing.JFrame {
         TreePath TP = TSM.getSelectionPath();
         if (TP == null){
             pasteButton.setEnabled(false);
-            removeButton.setEnabled(false);
+            removeSubTreeButton.setEnabled(false);
+            removeTagButton.setEnabled(false);
             copyButton.setEnabled(false);
             cutButton.setEnabled(false);
             saveButton.setEnabled(false);
             selectedNodeTextPane.setText("");
             return;
         }
-        MyTreeNode TC = (MyTreeNode)TP.getLastPathComponent();
+        MyTagsTreeNode TC = (MyTagsTreeNode)TP.getLastPathComponent();
         SubTree selectedNode = TC.getAssociatedNode();
         if (selectedNode == root){
             pasteButton.setEnabled(cutIsPressed || copyIsPressed);
-            removeButton.setEnabled(false);
+            removeSubTreeButton.setEnabled(false);
+            removeTagButton.setEnabled(false);
             copyButton.setEnabled(false);
             cutButton.setEnabled(false);
             selectedNodeTextPane.setText("this is a root");
@@ -522,7 +674,8 @@ public class MainFrame extends javax.swing.JFrame {
         }
         else {
             pasteButton.setEnabled(cutIsPressed || copyIsPressed);
-            removeButton.setEnabled(true);
+            removeSubTreeButton.setEnabled(true);
+            removeTagButton.setEnabled(true);
             copyButton.setEnabled(true);
             cutButton.setEnabled(true);
             saveButton.setEnabled(true);
@@ -534,7 +687,7 @@ public class MainFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         TreeSelectionModel TSM = jTree1.getSelectionModel();
         TreePath TP = TSM.getSelectionPath();
-        MyTreeNode TC = (MyTreeNode)TP.getLastPathComponent();
+        MyTagsTreeNode TC = (MyTagsTreeNode)TP.getLastPathComponent();
         SubTree selectedNode = TC.getAssociatedNode();
         try {
             Document xmlDoc = selectedNode.toDocument();
@@ -546,6 +699,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private final AttributesTableModel myAtrributeTableModel = new AttributesTableModel();
     private final TagsTableModel myTagsTableModel = new TagsTableModel();
+    private final TextContentTableModel myTextContentTableModel = new TextContentTableModel();
     private void attrPlusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_attrPlusButtonActionPerformed
         // TODO add your handling code here:
         myAtrributeTableModel.addRow();
@@ -569,16 +723,48 @@ public class MainFrame extends javax.swing.JFrame {
         if (rowIndex > -1)
             myTagsTableModel.removeRow(rowIndex);
     }//GEN-LAST:event_tagMinusButtonActionPerformed
+
+    private void removeTagButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeTagButtonActionPerformed
+        // TODO add your handling code here:
+        TreeSelectionModel TSM = jTree1.getSelectionModel();
+        TreePath TP = TSM.getSelectionPath();
+        if (TP == null)  
+            return;
+        MyTagsTreeNode TC = (MyTagsTreeNode)TP.getLastPathComponent();
+        SubTree remNode = TC.getAssociatedNode();
+        if (remNode == root)
+            return;
+        MyTagsTreeNode prnt = (MyTagsTreeNode) TC.getParent();
+        SubTree prntNode = prnt.getAssociatedNode();
+        prntNode.removeChild(remNode);  
+        for (SubTree remNodeChild: remNode.getChildNodes())
+            prntNode.addChild(remNodeChild);
+        updateTree();
+        copyIsPressed = false;
+        cutIsPressed = false;
+    }//GEN-LAST:event_removeTagButtonActionPerformed
+
+    private void contentPlusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contentPlusButtonActionPerformed
+        // TODO add your handling code here:
+        myTextContentTableModel.addRow();
+    }//GEN-LAST:event_contentPlusButtonActionPerformed
+
+    private void contentMinusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contentMinusButtonActionPerformed
+        // TODO add your handling code here:
+        int rowIndex = textContentTable.getSelectedRow();
+        if (rowIndex > -1)
+            myTextContentTableModel.removeRow(rowIndex);
+    }//GEN-LAST:event_contentMinusButtonActionPerformed
     
     private SubTree root = new SubTree();
-    private MyTreeNode jTreeRoot= new MyTreeNode();
-    private MyTreeNode getTreeNode(SubTree node){
+    private MyTagsTreeNode jTreeRoot= new MyTagsTreeNode();
+    private MyTagsTreeNode getTreeNode(SubTree node){
         ArrayList<SubTree> childNodes = node.getChildNodes();
-        MyTreeNode root = new MyTreeNode(node.getTag()); 
+        MyTagsTreeNode root = new MyTagsTreeNode(node.getTag()); 
         
         root.associateWithNode(node);
         for (SubTree child: childNodes){
-            MyTreeNode childNode = getTreeNode(child);
+            MyTagsTreeNode childNode = getTreeNode(child);
             root.add(childNode);
         }
         return root;
@@ -586,6 +772,12 @@ public class MainFrame extends javax.swing.JFrame {
     private void updateTree(){
         jTreeRoot = getTreeNode(root);
         jTree1.setModel(new DefaultTreeModel(jTreeRoot));
+        pasteButton.setEnabled(false);
+        removeSubTreeButton.setEnabled(false);
+        removeTagButton.setEnabled(false);
+        copyButton.setEnabled(false);
+        cutButton.setEnabled(false);
+        saveButton.setEnabled(false);
     }
     /**
      * @param args the command line arguments
@@ -632,6 +824,8 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTextField attributeMinField;
     private javax.swing.JTextField branchMaxField;
     private javax.swing.JTextField branchMinField;
+    private javax.swing.JButton contentMinusButton;
+    private javax.swing.JButton contentPlusButton;
     private javax.swing.JButton copyButton;
     private javax.swing.JButton cutButton;
     private javax.swing.JTextField depthMaxField;
@@ -641,6 +835,9 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -653,13 +850,19 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTree jTree1;
+    private javax.swing.JTree jTree2;
+    private javax.swing.JTextField maximalDepthFileld;
     private javax.swing.JTextField nameTextField;
     private javax.swing.JButton pasteButton;
-    private javax.swing.JButton removeButton;
+    private javax.swing.JButton removeSubTreeButton;
+    private javax.swing.JButton removeTagButton;
     private javax.swing.JButton saveButton;
     private javax.swing.JTextPane selectedNodeTextPane;
     private javax.swing.JButton tagMinusButton;
     private javax.swing.JButton tagPlusButton;
+    private javax.swing.JTable textContentTable;
     // End of variables declaration//GEN-END:variables
 }

@@ -5,16 +5,15 @@
  */
 package GUI.Models;
 
-import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Anatoly
  */
-public class TagsTableModel extends DefaultTableModel{
-    public TagsTableModel(){ setColumnIdentifiers(headers);}
-    private static final Object[] headers = {"tag name", "amount in level", "levels/parent tags"};
-    private static final Object[] rowData = {"","",""};
+public class TextContentTableModel extends DefaultTableModel{
+    public TextContentTableModel(){ setColumnIdentifiers(headers);}
+    private static final Object[] headers = {"levels/tags", "content"};
+    private static final Object[] rowData = {"",""};
     public void addRow(){ this.addRow(rowData);}
 }

@@ -12,14 +12,14 @@ import xmlgenerator.SubTree;
  *
  * @author Anatoly
  */
-public class MyTreeNode extends DefaultMutableTreeNode{
+public class MyTagsTreeNode extends DefaultMutableTreeNode{
     private SubTree associatedNode;
 
-    public MyTreeNode(String tag) {
+    public MyTagsTreeNode(String tag) {
         super(tag);
     }
 
-    public MyTreeNode() {
+    public MyTagsTreeNode() {
         super();
     }
     public void associateWithNode(SubTree node) { associatedNode = node;}
