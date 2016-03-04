@@ -288,9 +288,7 @@ public class SubTree {
         shift--;
     }
     public static void main(String[] argv){
-        SubTree test = new SubTree(1,4,1,4);
-        test.setIncidentalAttributes(1, 3);
-        test.showAsTree();
+        
     }
     public Document toDocument() throws ParserConfigurationException{
         Document document = XMLGenerator.getDocument("root");
@@ -316,7 +314,7 @@ public class SubTree {
     public String getAttributes() {
         return attributes.toString();
     }
-
+    
     public SubTree getCopy() {
         SubTree rtrn = new SubTree(tag);
         rtrn.attributes = (HashMap<String, String>) attributes.clone();

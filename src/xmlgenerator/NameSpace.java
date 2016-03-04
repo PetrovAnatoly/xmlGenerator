@@ -53,4 +53,11 @@ public class NameSpace {
     public void addName(String s) { names.add(s);}
     public void addChildNameSpace(NameSpace child) { childNodes.add(child);}
     public ArrayList<NameSpace> getChildNameSpaces(){ return childNodes;}
+
+    public NameSpace getCopy() {
+        NameSpace rtrn = new NameSpace(name);
+        rtrn.childNodes = (ArrayList<NameSpace>) childNodes.clone();
+        rtrn.names = (TreeSet<String>) names.clone();
+        return rtrn;
+    }
 }
