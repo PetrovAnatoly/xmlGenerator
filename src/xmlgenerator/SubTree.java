@@ -5,10 +5,12 @@
  */
 package xmlgenerator;
 
+import GUI.MainFrame;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.TreeSet;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -65,8 +67,17 @@ public class SubTree {
         HashMap<String, String> attributesOfThisTag = attributesOfTags.get(tag);
         if (attributesOfThisTag!=null)
             for (String attribute: attributesOfThisTag.keySet())
-                if (!attributes.containsKey(attribute))
-                    attributes.put(attribute, attributesOfThisTag.get(attribute));
+                if (!attributes.containsKey(attribute)){
+                    String s = attributesOfThisTag.get(attribute);
+                    if (s.startsWith("//")){
+                        s = s.replace("//", "");
+                        TreeSet<String> nmes = MainFrame.nsRoot.getNamesOfNS(s);
+                        int len = nmes.toArray().length;
+                        int index = getRandInt(0, len-1);
+                        s = (String) nmes.toArray()[index];
+                    }
+                    attributes.put(attribute, s);
+                }
         for (SubTree child: childNodes)
             child.SetAttributesOfTags(attributesOfTags);
     }
@@ -75,8 +86,17 @@ public class SubTree {
         HashMap<String, String> attributesInThisLevel = attributesInLevel.get(levelCounter);
         if (attributesInThisLevel!= null)
             for (String attribute: attributesInThisLevel.keySet())
-                if (!attributes.containsKey(attribute))
-                    attributes.put(attribute, attributesInThisLevel.get(attribute));
+                if (!attributes.containsKey(attribute)){
+                    String s = attributesInThisLevel.get(attribute);
+                    if (s.startsWith("//")){
+                        s = s.replace("//", "");
+                        TreeSet<String> nmes = MainFrame.nsRoot.getNamesOfNS(s);
+                        int len = nmes.toArray().length;
+                        int index = getRandInt(0, len-1);
+                        s = (String) nmes.toArray()[index];
+                    }
+                    attributes.put(attribute, s);
+                }
         levelCounter++;
         for (SubTree child: childNodes)
             child.setAttributesAtLevels(attributesInLevel);
@@ -85,8 +105,19 @@ public class SubTree {
     public void setAttributesAtAllLevels(HashMap<String, String> attributesInAllLevel){
         if (attributesInAllLevel!=null)
             for (String attribute: attributesInAllLevel.keySet())
-                if (!attributes.containsKey(attribute))
-                    attributes.put(attribute, attributesInAllLevel.get(attribute));
+                if (!attributes.containsKey(attribute)){
+                    if (!attributes.containsKey(attribute)){
+                        String s = attributesInAllLevel.get(attribute);
+                        if (s.startsWith("//")){
+                            s = s.replace("//", "");
+                            TreeSet<String> nmes = MainFrame.nsRoot.getNamesOfNS(s);
+                            int len = nmes.toArray().length;
+                            int index = getRandInt(0, len-1);
+                            s = (String) nmes.toArray()[index];
+                        }
+                        attributes.put(attribute, s);
+                    }
+                }
         for (SubTree child: childNodes)
             child.setAttributesAtAllLevels(attributesInAllLevel);
     }
@@ -170,7 +201,9 @@ public class SubTree {
     // 1.для тегов (в порядке строк таблицы)
     // 2. для уровней (-//-)
     // 3. содержимое для всех вершин (-//-)
-    public void setTextContent(HashMap<Integer, ArrayList<String>> textContentInLevels, ArrayList<String> textContentInAllLevels, HashMap<String, ArrayList<String>> textContentInTags) {
+    public void setTextContent(HashMap<Integer, ArrayList<String>> textContentInLevels, 
+            ArrayList<String> textContentInAllLevels, 
+            HashMap<String, ArrayList<String>> textContentInTags) {
         ArrayList<String> contentOfThisNode = new ArrayList<>();
         ArrayList<String> contentOfThisNodeTag = textContentInTags.get(tag);
         ArrayList<String> contentOfThisNodeLevel = textContentInLevels.get(levelCounter);
@@ -180,8 +213,16 @@ public class SubTree {
             contentOfThisNode = copyWithoutRepeat(contentOfThisNode, contentOfThisNodeLevel);
         if (textContentInAllLevels != null)
             contentOfThisNode = copyWithoutRepeat(contentOfThisNode, textContentInAllLevels);
-        for (String atomContent: contentOfThisNode)
+        for (String atomContent: contentOfThisNode){
+            if (atomContent.startsWith("//")){
+                atomContent = atomContent.replace("//", "");
+                TreeSet<String> nmes = MainFrame.nsRoot.getNamesOfNS(atomContent);
+                int len = nmes.toArray().length;
+                int index = getRandInt(0, len-1);
+                atomContent = (String) nmes.toArray()[index];
+            }
             textContent+=atomContent;
+        }
         levelCounter++;
         for (SubTree child: childNodes)
             child.setTextContent(textContentInLevels, textContentInAllLevels, textContentInTags);
