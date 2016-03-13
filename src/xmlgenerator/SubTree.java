@@ -6,11 +6,10 @@
 package xmlgenerator;
 
 import GUI.MainFrame;
+import GUI.NameSpaceDialog;
 import java.util.Random;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.TreeSet;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
@@ -46,15 +45,30 @@ public class SubTree {
         tag = rootTag;
     }
     
-    public void setIncidentalAttributes(int minAttr, int maxAttr/*, String attrNameRegularExpr, String attrValueRegularExpr*/){
+    public void setIncidentalAttributes(int minAttr, int maxAttr, String attrNameRegularExpr, String attrValueRegularExpr){
         int attrCount = getRandInt(minAttr, maxAttr);
+        int attemptsToGetUniqueAttribute = 50;
         for (int i=0; i < attrCount; i++){
-            //String attribute = getStringByRegularExpression(attrNameRegularExpr);
-            //String value = getStringByRegularExpression(attrValueRegularExpr);
-            attributes.put("attr"+String.valueOf(i), "val"+String.valueOf(i));
+            String attribute, value;
+            if (!attrNameRegularExpr.isEmpty()){
+                attribute = getStringByRegularExpression(attrNameRegularExpr);
+                while (attributes.containsKey(attribute) && attemptsToGetUniqueAttribute>0){
+                    attribute = getStringByRegularExpression(attrNameRegularExpr);
+                    attemptsToGetUniqueAttribute--;
+                }
+                attemptsToGetUniqueAttribute = 50;
+            }
+            else
+                attribute = "attr"+String.valueOf(i);
+            if (!attrValueRegularExpr.isEmpty())
+                value = getStringByRegularExpression(attrValueRegularExpr);
+            else 
+                value = "val"+String.valueOf(i);
+            if (!attributes.containsKey(attribute))
+                attributes.put(attribute, value);
         }
         for (SubTree childNode : childNodes) {
-            childNode.setIncidentalAttributes(minAttr, maxAttr/*, String attrNameRegularExpr, String attrValueRegularExpr*/);
+            childNode.setIncidentalAttributes(minAttr, maxAttr, attrNameRegularExpr, attrValueRegularExpr);
         }
     }
     private static HashMap<String, ArrayList<String>> attrInAllLvls = new HashMap<>();
@@ -139,7 +153,6 @@ public class SubTree {
             }
             else
                 rtrn = new ArrayListForNames(nmes);
-            //создаем новый NameSpace
             if (!storageNameSpaceName.isEmpty()){
                 NameSpace newNS;
                 if (MainFrame.nsRoot.containsChildNS(storageNameSpaceName))
@@ -148,7 +161,6 @@ public class SubTree {
                     newNS = new NameSpace(storageNameSpaceName);
                     MainFrame.nsRoot.addChildNameSpace(newNS);
                 }
-                System.out.println(assoc.containsKey(rtrn));
                 assoc.put(rtrn, newNS);
             }
         }
@@ -275,7 +287,7 @@ public class SubTree {
         for (SubTree newTag: newTagsAtThisParentTag){
             newTag.globalMaxDepth = globalMaxDepth-1;
             if (maxD!=0)
-                newTag.fill(minD>0 ? minD-1:0, maxD-1, minB, maxB);
+                newTag.fill(minD>0 ? minD-1:0, maxD-1, minB, maxB, randomTagsRegExpr);
             newTag.setTagsAtLevels(tagsInLevel, tagsInAllLevel, tagsofParentTags, maxImperativeLevel);
         }
         for (SubTree child: childNodes)
@@ -338,18 +350,26 @@ public class SubTree {
         childNodes.add(chld);
     }
     public void removeChild(SubTree chld) { childNodes.remove(chld);}
-    public void fill(int minDepth, int maxDepth, int minBranch, int maxBranch){
+    
+    private String randomTagsRegExpr = "";
+    public void fill(int minDepth, int maxDepth, int minBranch, int maxBranch, String randomTagsRegEx){
+        randomTagsRegExpr = randomTagsRegEx;
         minD = minDepth; maxD = maxDepth; minB = minBranch; maxB = maxBranch;
         boolean hasChilds = getRandInt(minDepth, maxDepth) != 0;
         if (hasChilds){
             int childCount = getRandInt(minBranch, maxBranch);
             for (int i=0; i < childCount; i++){
-                SubTree child = new SubTree("tag" + String.valueOf(counter));
+                String newTagName;
+                if (randomTagsRegEx.isEmpty())
+                    newTagName = "tag" + String.valueOf(counter);
+                else 
+                    newTagName = getStringByRegularExpression(randomTagsRegEx);
+                SubTree child = new SubTree(newTagName);
                 if (globalMaxDepth == 0)
                     break;
                 child.globalMaxDepth = globalMaxDepth - 1;
                 counter++;
-                child.fill(minDepth>0 ? minDepth-1:0, maxDepth-1, minBranch, maxBranch);
+                child.fill(minDepth>0 ? minDepth-1:0, maxDepth-1, minBranch, maxBranch, randomTagsRegEx);
                 childNodes.add(child);
             }
         }
@@ -360,9 +380,30 @@ public class SubTree {
             return 0;
         return from + (new Random()).nextInt(to-from+1);
     }
-    private String getStringByRegularExpression(String regularExpression){
-        //will be soon
-        return regularExpression;
+    private static String getStringByRegularExpression(String regEx){
+        String rtrn = regEx+"";
+        if (rtrn.contains("%id%"))
+            counter++;
+        rtrn = rtrn.replaceAll("%id%", String.valueOf(counter));
+        String parseResult = new String();
+        String s = new String();
+        boolean regExprAtomIsStarted = false;
+        for (int i = 0; i < rtrn.length(); i++){
+            if (rtrn.charAt(i) == '%'){
+                s += rtrn.charAt(i);
+                regExprAtomIsStarted = !regExprAtomIsStarted;
+                if (!regExprAtomIsStarted){
+                    parseResult += NameSpaceDialog.getValueByAtomRegEx(s);
+                    s = "";
+                }
+            }
+            else if (regExprAtomIsStarted)
+                s += rtrn.charAt(i);
+            else 
+                parseResult += rtrn.charAt(i);
+        }
+        parseResult+=s;
+        return parseResult;
     }
     private static int shift = 0;
     private void showAsTree()
@@ -379,9 +420,14 @@ public class SubTree {
         
     }
     public Document toDocument() throws ParserConfigurationException{
-        Document document = XMLGenerator.getDocument("root");
+        Document document = XMLGenerator.getDocument(tag);
         Element root = document.getDocumentElement();
-        insertIntoElement(document, root);
+        for (String key: attributes.keySet()){
+            root.setAttribute(key, attributes.get(key));
+        }
+        root.setTextContent(textContent);
+        for (SubTree child: childNodes)
+            child.insertIntoElement(document, root);
         return document;
     }
     private void insertIntoElement(Document document, Element element){
@@ -399,8 +445,11 @@ public class SubTree {
     public String getTag() { return tag;}
     public String getTextContent(){ return textContent;}
 
-    public String getAttributes() {
-        return attributes.toString();
+    public String getAttributesLines() {
+        String rtrn = new String();
+        for (String attr: attributes.keySet())
+            rtrn += attr+"="+"\"" + attributes.get(attr) + "\"\n";
+        return rtrn;
     }
     
     public SubTree getCopy() {

@@ -250,7 +250,7 @@ public class NameSpaceDialog extends javax.swing.JDialog {
         parseResult+=s;
         return parseResult;
     }
-    private String getValueByAtomRegEx(String s){
+    public static String getValueByAtomRegEx(String s){
         if (s.equals("%digit%"))
             return String.valueOf(random.nextInt(10));
         int number = random.nextInt(mCHAR.length());
@@ -268,7 +268,7 @@ public class NameSpaceDialog extends javax.swing.JDialog {
     }
     private static final String mCHAR = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
     private static final int STR_LENGTH = 10;
-    Random random = new Random();
+    private static Random random = new Random();
     public String createRandomString() {
     StringBuilder builder = new StringBuilder();
     for (int i = 0; i < STR_LENGTH; i++) {

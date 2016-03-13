@@ -11,7 +11,10 @@ import java.util.TreeSet;
 /**
  *
  * @author Anatoly
+ * @param <T>
  */
+
+//в HashMap можно будет хранить несколько ключей-объектов класса ArrayListForNames с одинаковым содержимым
 public class ArrayListForNames <T extends Object> extends ArrayList{
 
     ArrayListForNames(TreeSet<String> nmes) {
