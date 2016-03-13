@@ -519,11 +519,11 @@ public class MainFrame extends javax.swing.JFrame {
         for (int i = 0; i < imperativeAttributesTable.getRowCount(); i++){
             String attrName = (String) imperativeAttributesTable.getValueAt(i, 0);
             String attrValue = (String) imperativeAttributesTable.getValueAt(i, 1);
-            String levelsAndtags = (String) imperativeAttributesTable.getValueAt(i, 2);
-            if (levelsAndtags.equals("all") || levelsAndtags.trim().equals(""))
+            String levelsAndTags = (String) imperativeAttributesTable.getValueAt(i, 2);
+            if (levelsAndTags.equals("all") || levelsAndTags.trim().equals(""))
                 attributesInAllLevels.put(attrName, attrValue);
             else{
-                String[] levelsIntervalsAndPoints = levelsAndtags.split(",");
+                String[] levelsIntervalsAndPoints = levelsAndTags.split(",");
                 ArrayList<Integer> levelsArray = XMLGenerator.getIntegers(levelsIntervalsAndPoints);
                 ArrayList<String> tagsArray = XMLGenerator.getTagsInLastGetIntegerCalling();
                 for (Integer lvl: levelsArray){
@@ -627,6 +627,7 @@ public class MainFrame extends javax.swing.JFrame {
         xmlTree.setTextContent(textContentInLevels, textContentInAllLevels, textContentInTags);
         root.addChild(xmlTree);
         updateTree();
+        this.updateNameSpaceTree();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void removeSubTreeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeSubTreeButtonActionPerformed

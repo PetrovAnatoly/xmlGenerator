@@ -49,6 +49,27 @@ public class NameSpace {
                 return true;
         return false;
     }
+    public boolean containsChildNS(String nsName){
+        boolean rtrn = false;
+        for (NameSpace child: childNodes)
+            if (child.name.equals(nsName))
+                return true;
+            else if (child.containsChildNS(nsName))
+                return true;
+        return rtrn;
+    }
+    public NameSpace getChildByName(String nsName){
+        NameSpace rtrn = null;
+        for (NameSpace child: childNodes)
+            if (child.name.equals(nsName))
+                return child;
+            else {
+                rtrn = child.getChildByName(nsName);
+                if (rtrn!=null)
+                    return rtrn;
+            }
+        return rtrn;
+    }
     public TreeSet<String> getPersonalNames(){ return (TreeSet<String>) names.clone();}
     public void addName(String s) { names.add(s);}
     public void addChildNameSpace(NameSpace child) { childNodes.add(child);}

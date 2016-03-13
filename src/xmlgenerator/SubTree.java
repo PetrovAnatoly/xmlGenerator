@@ -56,66 +56,167 @@ public class SubTree {
             childNode.setIncidentalAttributes(minAttr, maxAttr/*, String attrNameRegularExpr, String attrValueRegularExpr*/);
         }
     }
+    private static HashMap<String, ArrayList<String>> attrInAllLvls = new HashMap<>();
+    private static HashMap<Integer, HashMap<String, ArrayList<String>>> attrInLvls = new HashMap<>();
+    private static HashMap<String, HashMap<String, ArrayList<String>>> attrInTags = new HashMap<>();
+    
+    private static HashMap<ArrayList<String>, NameSpace> assoc = new HashMap<>();
     public void setImperativeAttributes(HashMap<Integer,HashMap<String, String>> attributesInLevel, 
             HashMap<String, String> attributesInAllLevel, 
             HashMap<String, HashMap<String, String>> attributesOfTags){
-        SetAttributesOfTags(attributesOfTags);
-        setAttributesAtLevels(attributesInLevel);
-        setAttributesAtAllLevels(attributesInAllLevel);
+        attrInAllLvls = new HashMap<>();
+        attrInLvls = new HashMap<>();
+        attrInTags = new HashMap<>();
+        for (String attr: attributesInAllLevel.keySet()){
+            String s = attributesInAllLevel.get(attr);
+            ArrayList<String> valuesOfThisAttr = getNamesToUseAndCreateNewNSIfNeeded(s);
+            attrInAllLvls.put(attr, valuesOfThisAttr);
+        }
+        for (Integer level: attributesInLevel.keySet()){
+            HashMap<String, ArrayList<String>> attrInThisLvl;
+            if (attrInLvls.containsKey(level))
+                attrInThisLvl = attrInLvls.get(level);
+            else {
+                attrInThisLvl = new HashMap<>();
+                attrInLvls.put(level, attrInThisLvl);
+            }
+            for (String attr: attributesInLevel.get(level).keySet()){
+                String s = attributesInLevel.get(level).get(attr);
+                ArrayList<String> valuesOfThisAttr = getNamesToUseAndCreateNewNSIfNeeded(s);
+                attrInThisLvl.put(attr, valuesOfThisAttr);
+            }
+        }
+        for (String tag: attributesOfTags.keySet()){
+            HashMap<String, ArrayList<String>> attrInThisTag;
+            if (attrInTags.containsKey(tag))
+                attrInThisTag = attrInTags.get(tag);
+            else {
+                attrInThisTag = new HashMap<>();
+                attrInTags.put(tag, attrInThisTag);
+            }
+            for (String attr: attributesOfTags.get(tag).keySet()){
+                String s = attributesOfTags.get(tag).get(attr);
+                ArrayList<String> valuesOfThisAttr = getNamesToUseAndCreateNewNSIfNeeded(s);
+                attrInThisTag.put(attr, valuesOfThisAttr);
+            }
+        }
+        SetAttributesOfTags(attrInTags);
+        setAttributesAtLevels(attrInLvls);
+        setAttributesAtAllLevels(attrInAllLvls);
     }
-    public void SetAttributesOfTags(HashMap<String, HashMap<String, String>> attributesOfTags){
-        HashMap<String, String> attributesOfThisTag = attributesOfTags.get(tag);
+    private static ArrayList<String> getNamesToUseAndCreateNewNSIfNeeded(String s){
+        ArrayList<String> rtrn = new ArrayList<>();
+        String nsName = "";
+        String countStr = "";
+        int count = -1;
+        String storageNameSpaceName = "";
+        if (s.startsWith("//")){
+            s = String.copyValueOf(s.toCharArray(), 2, s.length()-2);
+            nsName = copyUpToDoubleSlash(s);
+            s = s.replaceFirst(nsName, "");
+            if (s.startsWith("//")){
+                s = String.copyValueOf(s.toCharArray(), 2, s.length()-2);
+                countStr = copyUpToDoubleSlash(s);
+                s = s.replaceFirst(countStr, "");
+                if (s.startsWith("//")){
+                    s = String.copyValueOf(s.toCharArray(), 2, s.length()-2);
+                    storageNameSpaceName = copyUpToDoubleSlash(s);
+                }
+            }
+            TreeSet<String> nmes = MainFrame.nsRoot.getNamesOfNS(nsName);
+            try{count = Integer.valueOf(countStr.trim());}
+            catch(NumberFormatException exc){}
+            if (count>0){
+                int len, index;
+                for (int i = 0; i < count; i++){
+                    len = nmes.toArray().length;
+                    index = getRandInt(0, len-1);
+                    s = (String) nmes.toArray()[index];
+                    rtrn.add(s);
+                    nmes.remove(s);
+                }
+            }
+            else
+                rtrn.addAll(nmes);
+            //создаем новый NameSpace
+            if (!storageNameSpaceName.isEmpty()){
+                NameSpace newNS;
+                if (MainFrame.nsRoot.containsChildNS(storageNameSpaceName))
+                    newNS = MainFrame.nsRoot.getChildByName(storageNameSpaceName);
+                else {
+                    newNS = new NameSpace(storageNameSpaceName);
+                    MainFrame.nsRoot.addChildNameSpace(newNS);
+                }
+                assoc.put(rtrn, newNS);
+            }
+        }
+        else 
+            rtrn.add(s);
+        return rtrn;
+    }
+    private static String copyUpToDoubleSlash(String s){
+        String rtrn = "";
+        boolean firstSlashIsReached = false;
+        for (int i = 0; i < s.length(); i++){
+            if (s.charAt(i) == '/')
+                if (firstSlashIsReached)
+                    break;
+                else
+                    if (i == s.length()-1)
+                        rtrn+=s.charAt(i);
+                    else
+                        firstSlashIsReached = true;
+            else{
+                rtrn+=s.charAt(i);
+                firstSlashIsReached = false;
+            }
+        }
+        return rtrn;
+    }
+    public void SetAttributesOfTags(HashMap<String, HashMap<String, ArrayList<String>>> attributesOfTags){
+        HashMap<String, ArrayList<String>> attributesOfThisTag = attributesOfTags.get(tag);
         if (attributesOfThisTag!=null)
             for (String attribute: attributesOfThisTag.keySet())
                 if (!attributes.containsKey(attribute)){
-                    String s = attributesOfThisTag.get(attribute);
-                    if (s.startsWith("//")){
-                        s = s.replace("//", "");
-                        TreeSet<String> nmes = MainFrame.nsRoot.getNamesOfNS(s);
-                        int len = nmes.toArray().length;
-                        int index = getRandInt(0, len-1);
-                        s = (String) nmes.toArray()[index];
-                    }
+                    ArrayList<String> names = attributesOfThisTag.get(attribute);
+                    int position = getRandInt(0, names.size()-1);
+                    String s = names.get(position);
                     attributes.put(attribute, s);
+                    if (assoc.containsKey(names))
+                        assoc.get(names).addName(s);
                 }
         for (SubTree child: childNodes)
             child.SetAttributesOfTags(attributesOfTags);
     }
     private static int levelCounter = 0;
-    public void setAttributesAtLevels(HashMap<Integer,HashMap<String, String>> attributesInLevel){
-        HashMap<String, String> attributesInThisLevel = attributesInLevel.get(levelCounter);
+    public void setAttributesAtLevels(HashMap<Integer,HashMap<String, ArrayList<String>>> attributesInLevel){
+        HashMap<String, ArrayList<String>> attributesInThisLevel = attributesInLevel.get(levelCounter);
         if (attributesInThisLevel!= null)
             for (String attribute: attributesInThisLevel.keySet())
                 if (!attributes.containsKey(attribute)){
-                    String s = attributesInThisLevel.get(attribute);
-                    if (s.startsWith("//")){
-                        s = s.replace("//", "");
-                        TreeSet<String> nmes = MainFrame.nsRoot.getNamesOfNS(s);
-                        int len = nmes.toArray().length;
-                        int index = getRandInt(0, len-1);
-                        s = (String) nmes.toArray()[index];
-                    }
+                    ArrayList<String> names = attributesInThisLevel.get(attribute);
+                    int position = getRandInt(0, names.size()-1);
+                    String s = names.get(position);
                     attributes.put(attribute, s);
+                    if (assoc.containsKey(names))
+                        assoc.get(names).addName(s);
                 }
         levelCounter++;
         for (SubTree child: childNodes)
             child.setAttributesAtLevels(attributesInLevel);
         levelCounter--;
     }
-    public void setAttributesAtAllLevels(HashMap<String, String> attributesInAllLevel){
+    public void setAttributesAtAllLevels(HashMap<String, ArrayList<String>> attributesInAllLevel){
         if (attributesInAllLevel!=null)
             for (String attribute: attributesInAllLevel.keySet())
                 if (!attributes.containsKey(attribute)){
                     if (!attributes.containsKey(attribute)){
-                        String s = attributesInAllLevel.get(attribute);
-                        if (s.startsWith("//")){
-                            s = s.replace("//", "");
-                            TreeSet<String> nmes = MainFrame.nsRoot.getNamesOfNS(s);
-                            int len = nmes.toArray().length;
-                            int index = getRandInt(0, len-1);
-                            s = (String) nmes.toArray()[index];
-                        }
+                        ArrayList<String> names = attributesInAllLevel.get(attribute);
+                        int position = getRandInt(0, names.size()-1);
+                        String s = names.get(position);
                         attributes.put(attribute, s);
+                        if (assoc.containsKey(names))
+                            assoc.get(names).addName(s);
                     }
                 }
         for (SubTree child: childNodes)
@@ -267,7 +368,8 @@ public class SubTree {
             }
         }
     }
-    private int getRandInt(int from, int to){
+    // до to включительно
+    private static int getRandInt(int from, int to){
         if (to == 0)
             return 0;
         return from + (new Random()).nextInt(to-from+1);
