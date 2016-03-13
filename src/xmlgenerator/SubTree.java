@@ -8,6 +8,7 @@ package xmlgenerator;
 import GUI.MainFrame;
 import java.util.Random;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeSet;
@@ -59,7 +60,6 @@ public class SubTree {
     private static HashMap<String, ArrayList<String>> attrInAllLvls = new HashMap<>();
     private static HashMap<Integer, HashMap<String, ArrayList<String>>> attrInLvls = new HashMap<>();
     private static HashMap<String, HashMap<String, ArrayList<String>>> attrInTags = new HashMap<>();
-    
     private static HashMap<ArrayList<String>, NameSpace> assoc = new HashMap<>();
     public void setImperativeAttributes(HashMap<Integer,HashMap<String, String>> attributesInLevel, 
             HashMap<String, String> attributesInAllLevel, 
@@ -67,6 +67,7 @@ public class SubTree {
         attrInAllLvls = new HashMap<>();
         attrInLvls = new HashMap<>();
         attrInTags = new HashMap<>();
+        assoc = new HashMap<>();
         for (String attr: attributesInAllLevel.keySet()){
             String s = attributesInAllLevel.get(attr);
             ArrayList<String> valuesOfThisAttr = getNamesToUseAndCreateNewNSIfNeeded(s);
@@ -105,7 +106,7 @@ public class SubTree {
         setAttributesAtAllLevels(attrInAllLvls);
     }
     private static ArrayList<String> getNamesToUseAndCreateNewNSIfNeeded(String s){
-        ArrayList<String> rtrn = new ArrayList<>();
+        ArrayListForNames<String> rtrn = new ArrayListForNames<>();
         String nsName = "";
         String countStr = "";
         int count = -1;
@@ -126,7 +127,7 @@ public class SubTree {
             TreeSet<String> nmes = MainFrame.nsRoot.getNamesOfNS(nsName);
             try{count = Integer.valueOf(countStr.trim());}
             catch(NumberFormatException exc){}
-            if (count>0){
+            if (count>0 && count<nmes.size()){
                 int len, index;
                 for (int i = 0; i < count; i++){
                     len = nmes.toArray().length;
@@ -137,7 +138,7 @@ public class SubTree {
                 }
             }
             else
-                rtrn.addAll(nmes);
+                rtrn = new ArrayListForNames(nmes);
             //создаем новый NameSpace
             if (!storageNameSpaceName.isEmpty()){
                 NameSpace newNS;
@@ -147,6 +148,7 @@ public class SubTree {
                     newNS = new NameSpace(storageNameSpaceName);
                     MainFrame.nsRoot.addChildNameSpace(newNS);
                 }
+                System.out.println(assoc.containsKey(rtrn));
                 assoc.put(rtrn, newNS);
             }
         }
@@ -233,22 +235,6 @@ public class SubTree {
         setTagsAtLevels(tagsInLevel, tagsInAllLevel, tagsofParentTags,maxImperativeLevel);
         //setTagsAtAllLevels(tagsInAllLevel);
     }
-    /*public void setTagsAtAllLevels(HashMap<String, String[]> tagsInAllLevel){
-        if (childNodes.isEmpty()) return;
-        ArrayList<SubTree> newTagsAtThisLevel = new ArrayList<>();
-        for (String thisTag: tagsInAllLevel.keySet()){
-            int numOfThisTag = XMLGenerator.getRandomInt(tagsInAllLevel.get(thisTag));
-            newTagsAtThisLevel.addAll(makeNodesWithThisString(thisTag, numOfThisTag));
-        }
-        if (maxD>0)
-            for (SubTree newTag: newTagsAtThisLevel){
-                newTag.fill(minD>0 ? minD-1:0, maxD-1, minB, maxB);
-                newTag.setTagsAtAllLevels(tagsInAllLevel);
-            }
-        for (SubTree child: childNodes)
-            child.setTagsAtAllLevels(tagsInAllLevel);
-        childNodes.addAll(newTagsAtThisLevel);
-    }*/
     public void setTagsAtLevels(HashMap<Integer,HashMap<String, String[]>> tagsInLevel,
             HashMap<String, String[]> tagsInAllLevel, 
             HashMap<String, HashMap<String, String[]>> tagsofParentTags,
