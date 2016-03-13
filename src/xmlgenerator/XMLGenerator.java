@@ -64,7 +64,7 @@ public class XMLGenerator {
                     Integer lvl = Integer.valueOf(s.trim());
                     rtrn.add(lvl);
                 }
-                catch(NumberFormatException exc){foundTags.add(s.trim());}
+                catch(NumberFormatException exc){if (!s.trim().isEmpty()) foundTags.add(s.trim());}
             }
         }
         return rtrn;

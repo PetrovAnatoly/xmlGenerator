@@ -97,9 +97,13 @@ public class NameSpaceDialog extends javax.swing.JDialog {
             }
         });
 
+        randNameCountTextField.setText("50");
+
         jLabel2.setText("Количество случайных имен:");
 
         jLabel3.setText("Регулярное выражение для генерации:");
+
+        regularExpressionTextField.setText("%setName%_%id%");
 
         jLabel4.setText("Используемые подстановки: %setName%, %id%, %digit%, %*%, %?%");
 

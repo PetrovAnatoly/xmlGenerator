@@ -128,6 +128,10 @@ public class SubTree {
         if (s.startsWith("//")){
             s = String.copyValueOf(s.toCharArray(), 2, s.length()-2);
             nsName = copyUpToDoubleSlash(s);
+            if (!MainFrame.nsRoot.containsChildNS(nsName)){
+                rtrn.add("//"+s);
+                return rtrn;
+            }
             s = s.replaceFirst(nsName, "");
             if (s.startsWith("//")){
                 s = String.copyValueOf(s.toCharArray(), 2, s.length()-2);
@@ -314,11 +318,13 @@ public class SubTree {
             contentOfThisNode = copyWithoutRepeat(contentOfThisNode, textContentInAllLevels);
         for (String atomContent: contentOfThisNode){
             if (atomContent.startsWith("//")){
-                atomContent = atomContent.replace("//", "");
-                TreeSet<String> nmes = MainFrame.nsRoot.getNamesOfNS(atomContent);
-                int len = nmes.toArray().length;
-                int index = getRandInt(0, len-1);
-                atomContent = (String) nmes.toArray()[index];
+                if (MainFrame.nsRoot.containsChildNS(atomContent.replace("//", ""))){
+                    atomContent = atomContent.replace("//", "");
+                    TreeSet<String> nmes = MainFrame.nsRoot.getNamesOfNS(atomContent);
+                    int len = nmes.toArray().length;
+                    int index = getRandInt(0, len-1);
+                    atomContent = (String) nmes.toArray()[index];
+                }
             }
             textContent+=atomContent;
         }
@@ -380,7 +386,7 @@ public class SubTree {
             return 0;
         return from + (new Random()).nextInt(to-from+1);
     }
-    private static String getStringByRegularExpression(String regEx){
+    public static String getStringByRegularExpression(String regEx){ 
         String rtrn = regEx+"";
         if (rtrn.contains("%id%"))
             counter++;

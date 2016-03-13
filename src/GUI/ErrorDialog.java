@@ -17,8 +17,14 @@ public class ErrorDialog extends javax.swing.JDialog {
     public ErrorDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        setLocationRelativeTo(null);
     }
-
+    public void setErrorMessage(String errMess){
+        errorMessageField.setText(errMess);
+    }
+    public void setHeader(String title){
+        setTitle(title);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -31,7 +37,9 @@ public class ErrorDialog extends javax.swing.JDialog {
         errorMessageField = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
+        errorMessageField.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         errorMessageField.setText("здесь сообщение об ошибке");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -39,16 +47,16 @@ public class ErrorDialog extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(129, 129, 129)
+                .addContainerGap(140, Short.MAX_VALUE)
                 .addComponent(errorMessageField)
-                .addContainerGap(151, Short.MAX_VALUE))
+                .addContainerGap(140, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(50, 50, 50)
+                .addGap(55, 55, 55)
                 .addComponent(errorMessageField)
-                .addContainerGap(54, Short.MAX_VALUE))
+                .addContainerGap(49, Short.MAX_VALUE))
         );
 
         pack();

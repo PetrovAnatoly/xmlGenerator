@@ -36,6 +36,7 @@ public class MainFrame extends javax.swing.JFrame {
      */
     public MainFrame() {
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -65,7 +66,7 @@ public class MainFrame extends javax.swing.JFrame {
         jTree1 = new javax.swing.JTree();
         saveButton = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
-        nameTextField = new javax.swing.JTextField();
+        rootTagRegExTextField = new javax.swing.JTextField();
         copyButton = new javax.swing.JButton();
         cutButton = new javax.swing.JButton();
         pasteButton = new javax.swing.JButton();
@@ -105,6 +106,8 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel17 = new javax.swing.JLabel();
         jScrollPane7 = new javax.swing.JScrollPane();
         selectedNodeTextArea = new javax.swing.JTextArea();
+        geteratingIterationCountTextField = new javax.swing.JTextField();
+        jLabel18 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -150,7 +153,7 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        jLabel8.setText("Название:");
+        jLabel8.setText("Регулярное выражение для корневой тега генерируемого дерева:");
 
         copyButton.setText("Копировать");
         copyButton.addActionListener(new java.awt.event.ActionListener() {
@@ -253,7 +256,7 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        jLabel13.setText("Максимальная глубина:");
+        jLabel13.setText("Максимальная глубина всего дерева:");
 
         nsAddButton.setText("Добавить");
         nsAddButton.addActionListener(new java.awt.event.ActionListener() {
@@ -290,7 +293,7 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        jLabel14.setText("Регулярные выражения для случайных значений:");
+        jLabel14.setText("Регулярные выражения для случайных значений (Используемые подстановки: %id%, %digit%, %*%, %?%):");
 
         jLabel15.setText("Для тегов:");
 
@@ -301,6 +304,8 @@ public class MainFrame extends javax.swing.JFrame {
         selectedNodeTextArea.setColumns(20);
         selectedNodeTextArea.setRows(5);
         jScrollPane7.setViewportView(selectedNodeTextArea);
+
+        jLabel18.setText("Количество генераций:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -335,18 +340,75 @@ public class MainFrame extends javax.swing.JFrame {
                             .addComponent(nsCutButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(nsPasteButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(nsRemoveButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addComponent(contentPlusButton)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(contentMinusButton))
+                                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                                        .addGap(5, 5, 5))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(randomTagsRegExTextField)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel12)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addComponent(jLabel8)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING)))
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addComponent(attrPlusButton)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(attrMinusButton))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                    .addComponent(randomAttributesRegExTextField, javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addGroup(layout.createSequentialGroup()
+                                                        .addGap(0, 0, Short.MAX_VALUE)
+                                                        .addComponent(tagPlusButton)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(tagMinusButton))
+                                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                                        .addComponent(jLabel10)
+                                                        .addGap(0, 0, Short.MAX_VALUE))
+                                                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel16)
+                                                .addGap(99, 99, 99)))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                            .addComponent(randomAttributesValuesRegExTextField)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(jLabel17)
+                                                    .addComponent(jLabel9))
+                                                .addGap(0, 0, Short.MAX_VALUE))))))
                             .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel15)
+                                    .addComponent(jLabel14))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel18, javax.swing.GroupLayout.Alignment.TRAILING))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addComponent(geteratingIterationCountTextField)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(jButton1))
+                                            .addComponent(rootTagRegExTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                         .addComponent(jLabel2)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -371,58 +433,11 @@ public class MainFrame extends javax.swing.JFrame {
                                                 .addComponent(attributeMaxField, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(jLabel7))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel14)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(jLabel13)))
+                                            .addComponent(jLabel13))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                             .addComponent(maximalDepthFileld, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
-                                            .addComponent(attributeMinField)))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(jLabel12)
-                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                    .addComponent(contentPlusButton)
-                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                    .addComponent(contentMinusButton))
-                                                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                                                .addComponent(randomTagsRegExTextField))
-                                            .addComponent(jLabel15))
-                                        .addGap(5, 5, 5)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                .addGap(0, 0, Short.MAX_VALUE)
-                                                .addComponent(attrPlusButton)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(attrMinusButton))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addGroup(layout.createSequentialGroup()
-                                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                            .addComponent(randomAttributesRegExTextField, javax.swing.GroupLayout.Alignment.LEADING)
-                                                            .addGroup(layout.createSequentialGroup()
-                                                                .addGap(0, 0, Short.MAX_VALUE)
-                                                                .addComponent(tagPlusButton)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(tagMinusButton))
-                                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                                                .addComponent(jLabel10)
-                                                                .addGap(0, 0, Short.MAX_VALUE))
-                                                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                                                    .addGroup(layout.createSequentialGroup()
-                                                        .addComponent(jLabel16)
-                                                        .addGap(99, 99, 99)))
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                                                    .addComponent(randomAttributesValuesRegExTextField)
-                                                    .addGroup(layout.createSequentialGroup()
-                                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                            .addComponent(jLabel17)
-                                                            .addComponent(jLabel9))
-                                                        .addGap(0, 0, Short.MAX_VALUE)))))))))))
+                                            .addComponent(attributeMinField))))))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -475,28 +490,29 @@ public class MainFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(maximalDepthFileld, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel13)
-                            .addComponent(jLabel14))
+                            .addComponent(jLabel13))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel14)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel15)
-                            .addComponent(jLabel16)
-                            .addComponent(jLabel17))
-                        .addGap(8, 8, 8)
+                            .addComponent(jLabel17)
+                            .addComponent(jLabel16))
+                        .addGap(7, 7, 7)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(randomTagsRegExTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(randomAttributesValuesRegExTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(randomAttributesRegExTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(randomAttributesValuesRegExTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(randomTagsRegExTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel12)
                             .addComponent(jLabel10)
-                            .addComponent(jLabel9)
-                            .addComponent(jLabel12))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(jLabel9))
+                        .addGap(2, 2, 2)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                             .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE))
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE))
                         .addGap(15, 15, 15)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(attrMinusButton)
@@ -509,14 +525,16 @@ public class MainFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(rootTagRegExTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(pasteButton)
                     .addComponent(nsViewButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(saveButton)
-                    .addComponent(nsRemoveButton))
+                    .addComponent(nsRemoveButton)
+                    .addComponent(geteratingIterationCountTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel18))
                 .addContainerGap())
         );
 
@@ -533,34 +551,85 @@ public class MainFrame extends javax.swing.JFrame {
     }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        if (!inputIsCorrect()){
+        boolean incorrectInputOfRandomParams = false;
+        int maxDepth, minDepth, branchMax, branchMin, attrMax, attrMin, globalMaxDepth;
+        try{minDepth = Integer.valueOf( depthMinField.getText().trim());}
+        catch(NumberFormatException exc){ 
+            if (!depthMinField.getText().trim().isEmpty())
+                incorrectInputOfRandomParams = true;
+            minDepth = 0;}
+        try{maxDepth = Integer.valueOf( depthMaxField.getText().trim());}
+        catch(NumberFormatException exc){ 
+            if (!incorrectInputOfRandomParams)
+                if (!depthMaxField.getText().trim().isEmpty())
+                    incorrectInputOfRandomParams = true;
+            maxDepth = minDepth;
+        }
+        try{branchMin = Integer.valueOf( branchMinField.getText().trim());}
+        catch(NumberFormatException exc){ 
+            if (!incorrectInputOfRandomParams)
+                if (!branchMinField.getText().trim().isEmpty())
+                    incorrectInputOfRandomParams = true;
+            branchMin = 0;
+        }
+        try{branchMax = Integer.valueOf( branchMaxField.getText().trim());}
+        catch(NumberFormatException exc){ 
+            if (!incorrectInputOfRandomParams)
+                if (!branchMaxField.getText().trim().isEmpty())
+                    incorrectInputOfRandomParams = true;
+            branchMax = branchMin;
+        }
+        try{attrMin = Integer.valueOf(attributeMinField.getText().trim());}
+        catch(NumberFormatException exc){ 
+            if (!incorrectInputOfRandomParams)
+                if (!attributeMinField.getText().trim().isEmpty())
+                    incorrectInputOfRandomParams = true;
+            attrMin = 0;
+        }
+        try{attrMax = Integer.valueOf( attributeMaxField.getText().trim());}
+        catch(NumberFormatException exc){ 
+            if (!incorrectInputOfRandomParams)
+                if (!attributeMaxField.getText().trim().isEmpty())
+                    incorrectInputOfRandomParams = true;
+            attrMax = attrMin;
+        }
+        if (incorrectInputOfRandomParams){
             ErrorDialog errDialog = new ErrorDialog(this, true);
+            errDialog.setHeader("Некорректный ввод!");
+            errDialog.setErrorMessage("Некорректная запись параметров случайных тегов/атрибутов пропущена!");
+            errDialog.setVisible(true);
+        }
+        try{globalMaxDepth = Integer.valueOf( maximalDepthFileld.getText().trim());}
+        catch(NumberFormatException exc){
+            if (!maximalDepthFileld.getText().trim().isEmpty()){
+                ErrorDialog errDialog = new ErrorDialog(this, true);
+                errDialog.setHeader("Некорректный ввод!");
+                errDialog.setErrorMessage("Некорректная запись максимальной глубины пропущена!");
+                errDialog.setVisible(true);
+            }
+            globalMaxDepth = Integer.MAX_VALUE;
+        }
+        String rootName = rootTagRegExTextField.getText().trim();
+        if (rootName.isEmpty()){
+            ErrorDialog errDialog = new ErrorDialog(this, true);
+            errDialog.setErrorMessage("Введите название корневого тега!");
             errDialog.setVisible(true);
             return;
         }
-        int maxDepth, minDepth, branchMax, branchMin, attrMax, attrMin, globalMaxDepth;
-        try{minDepth = Integer.valueOf( depthMinField.getText().trim());}
-        catch(NumberFormatException exc){ minDepth = 0;}
-        try{maxDepth = Integer.valueOf( depthMaxField.getText().trim());}
-        catch(NumberFormatException exc){ maxDepth = minDepth;}
-        try{branchMin = Integer.valueOf( branchMinField.getText().trim());}
-        catch(NumberFormatException exc){ branchMin = 0;}
-        try{branchMax = Integer.valueOf( branchMaxField.getText().trim());}
-        catch(NumberFormatException exc){ branchMax = branchMin;}
-        try{attrMin = Integer.valueOf(attributeMinField.getText().trim());}
-        catch(NumberFormatException exc){ attrMin = 0;}
-        try{attrMax = Integer.valueOf( attributeMaxField.getText().trim());}
-        catch(NumberFormatException exc){ attrMax = attrMin;}
-        try{globalMaxDepth = Integer.valueOf( maximalDepthFileld.getText().trim());}
-        catch(NumberFormatException exc){globalMaxDepth = Integer.MAX_VALUE;}
-        String rootName = nameTextField.getText();
         HashMap<Integer,HashMap<String, String>> attributesInLevel = new HashMap<>();
         HashMap<String, HashMap<String, String>> attributesOfTags = new HashMap<>();
         HashMap<String, String> attributesInAllLevels = new HashMap<>();
         for (int i = 0; i < imperativeAttributesTable.getRowCount(); i++){
-            String attrName = (String) imperativeAttributesTable.getValueAt(i, 0);
-            String attrValue = (String) imperativeAttributesTable.getValueAt(i, 1);
-            String levelsAndTags = (String) imperativeAttributesTable.getValueAt(i, 2);
+            String attrName = ((String) imperativeAttributesTable.getValueAt(i, 0)).trim();
+            String attrValue = ((String) imperativeAttributesTable.getValueAt(i, 1)).trim();
+            if (attrName.isEmpty() || attrValue.isEmpty()){
+                ErrorDialog errDialog = new ErrorDialog(this, true);
+                errDialog.setHeader("Некорректный ввод!");
+                errDialog.setErrorMessage("Строка " + String.valueOf(i+1)+ " таблицы атрибутов заполнена некорректно. Пропуск.");
+                errDialog.setVisible(true);
+                continue;
+            }
+            String levelsAndTags = ((String) imperativeAttributesTable.getValueAt(i, 2)).trim();
             if (levelsAndTags.equals("all") || levelsAndTags.trim().equals(""))
                 attributesInAllLevels.put(attrName, attrValue);
             else{
@@ -593,9 +662,17 @@ public class MainFrame extends javax.swing.JFrame {
         HashMap<String, HashMap<String, String[]>> tagsofParentTags = new HashMap<>();
         HashMap<String, String[]> tagsInAllLevels = new HashMap<>();
         for (int i = 0; i < imperativeTagsTable.getRowCount(); i++){
-            String tagName = (String) imperativeTagsTable.getValueAt(i, 0);
-            String amountInLevelStr = (String) imperativeTagsTable.getValueAt(i, 1);
+            String tagName = ((String) imperativeTagsTable.getValueAt(i, 0)).trim();
+            String amountInLevelStr = ((String) imperativeTagsTable.getValueAt(i, 1)).trim();
             String[] amountArray = amountInLevelStr.split(",");
+            XMLGenerator.getIntegers(amountArray);
+            if (tagName.isEmpty() || amountInLevelStr.isEmpty() || !XMLGenerator.getTagsInLastGetIntegerCalling().isEmpty()){
+                ErrorDialog errDialog = new ErrorDialog(this, true);
+                errDialog.setHeader("Некорректный ввод!");
+                errDialog.setErrorMessage("Строка " + String.valueOf(i+1)+ " таблицы тегов заполнена некорректно. Пропуск.");
+                errDialog.setVisible(true);
+                continue;
+            }
             String levelsAndTagsStr = (String) imperativeTagsTable.getValueAt(i, 2);
             if (levelsAndTagsStr.equals("all") || levelsAndTagsStr.trim().equals(""))
                 tagsInAllLevels.put(tagName,amountArray);
@@ -659,17 +736,30 @@ public class MainFrame extends javax.swing.JFrame {
                 }
             }
         }
-        SubTree xmlTree = new SubTree(rootName);
-        xmlTree.setGlobalMaximunDepth(globalMaxDepth);
-        String randomTagsRexEx = randomTagsRegExTextField.getText().trim();
-        xmlTree.fill(minDepth, maxDepth, branchMin, branchMax, randomTagsRexEx);
-        xmlTree.setImperativeTags(tagsInLevels, tagsInAllLevels, tagsofParentTags);
-        String randomAttributesRegEx = randomAttributesRegExTextField.getText().trim();
-        String randomAttributesValuesRegEx = randomAttributesValuesRegExTextField.getText().trim();
-        xmlTree.setIncidentalAttributes(attrMax, attrMin, randomAttributesRegEx, randomAttributesValuesRegEx); 
-        xmlTree.setImperativeAttributes(attributesInLevel, attributesInAllLevels, attributesOfTags);
-        xmlTree.setTextContent(textContentInLevels, textContentInAllLevels, textContentInTags);
-        root.addChild(xmlTree);
+        int iterCount = 1;
+        try{iterCount = Integer.valueOf( geteratingIterationCountTextField.getText().trim());}
+        catch(NumberFormatException exc){
+            if (!geteratingIterationCountTextField.getText().trim().isEmpty()){
+                ErrorDialog errDialog = new ErrorDialog(this, true);
+                errDialog.setHeader("Некорректный ввод!");
+                errDialog.setErrorMessage("Некорректная запись количества генераций пропущена!");
+                errDialog.setVisible(true);
+            }
+            globalMaxDepth = Integer.MAX_VALUE;
+        }
+        for (int i = 0; i < iterCount; i++){
+            SubTree xmlTree = new SubTree(SubTree.getStringByRegularExpression(rootName));
+            xmlTree.setGlobalMaximunDepth(globalMaxDepth);
+            String randomTagsRexEx = randomTagsRegExTextField.getText().trim();
+            xmlTree.fill(minDepth, maxDepth, branchMin, branchMax, randomTagsRexEx);
+            xmlTree.setImperativeTags(tagsInLevels, tagsInAllLevels, tagsofParentTags);
+            String randomAttributesRegEx = randomAttributesRegExTextField.getText().trim();
+            String randomAttributesValuesRegEx = randomAttributesValuesRegExTextField.getText().trim();
+            xmlTree.setIncidentalAttributes(attrMax, attrMin, randomAttributesRegEx, randomAttributesValuesRegEx); 
+            xmlTree.setImperativeAttributes(attributesInLevel, attributesInAllLevels, attributesOfTags);
+            xmlTree.setTextContent(textContentInLevels, textContentInAllLevels, textContentInTags);
+            root.addChild(xmlTree);
+        }
         updateTree();
         this.updateNameSpaceTree();
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -1065,6 +1155,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton cutButton;
     private javax.swing.JTextField depthMaxField;
     private javax.swing.JTextField depthMinField;
+    private javax.swing.JTextField geteratingIterationCountTextField;
     private javax.swing.JTable imperativeAttributesTable;
     private javax.swing.JTable imperativeTagsTable;
     private javax.swing.JButton jButton1;
@@ -1077,6 +1168,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1093,7 +1185,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JTree jTree1;
     private javax.swing.JTextField maximalDepthFileld;
-    private javax.swing.JTextField nameTextField;
     private javax.swing.JTree namespaceTree;
     private javax.swing.JButton nsAddButton;
     private javax.swing.JButton nsCutButton;
@@ -1106,6 +1197,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTextField randomTagsRegExTextField;
     private javax.swing.JButton removeSubTreeButton;
     private javax.swing.JButton removeTagButton;
+    private javax.swing.JTextField rootTagRegExTextField;
     private javax.swing.JButton saveButton;
     private javax.swing.JTextArea selectedNodeTextArea;
     private javax.swing.JButton tagMinusButton;
