@@ -207,6 +207,10 @@ public class NameSpaceDialog extends javax.swing.JDialog {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         String nsName = nameSetTextField.getText().trim();
+        if (nsName.isEmpty()){
+            ErrorDialog.showErrorDialog("Ошибка!", "Пустое имя словаря!");
+            return;
+        }
         nameSpace.setSetName(nsName);
         for (String s: toRem)
             nameSpace.getNameSet().remove(s);
