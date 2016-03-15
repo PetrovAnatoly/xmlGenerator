@@ -916,7 +916,7 @@ public class MainFrame extends javax.swing.JFrame {
             XMLGenerator.writeDocument(absolutePath ,xmlDoc);
         } catch (Exception ex) {
             ErrorDialog.showErrorDialog("Файл не удалось сохранить!");
-        } 
+        }
         pasteButton.setEnabled(false);
         tagCutIsPressed = false;
         tagCopyIsPressed = false;
