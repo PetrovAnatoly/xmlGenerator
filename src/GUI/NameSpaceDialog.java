@@ -6,8 +6,10 @@
 package GUI;
 
 import GUI.Models.NameSpaceTableModel;
+import java.awt.Frame;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.TreeSet;
 import javax.swing.table.TableModel;
 import xmlgenerator.NameSpace;
 
@@ -24,6 +26,7 @@ public class NameSpaceDialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         nameSpace = new NameSpace();
+        setLocationRelativeTo(null);
     }
     public NameSpaceDialog(java.awt.Frame parent, boolean modal, NameSpace ns) {
         super(parent, modal);
@@ -33,6 +36,7 @@ public class NameSpaceDialog extends javax.swing.JDialog {
         nameSetTextField.setText(ns.getSetName());
         jTable1.setModel(myTableModel);
         newnsCreating = false;
+        setLocationRelativeTo(null);
     }
     private boolean newnsCreating = true;
     /**
@@ -83,7 +87,7 @@ public class NameSpaceDialog extends javax.swing.JDialog {
             }
         });
 
-        jButton3.setText("ок");
+        jButton3.setText("Сохранить");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -136,9 +140,9 @@ public class NameSpaceDialog extends javax.swing.JDialog {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButton4))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(0, 196, Short.MAX_VALUE)
+                                .addGap(0, 175, Short.MAX_VALUE)
                                 .addComponent(jButton3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 131, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 110, Short.MAX_VALUE)
                                 .addComponent(jButton2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButton1))
@@ -199,6 +203,7 @@ public class NameSpaceDialog extends javax.swing.JDialog {
         myTableModel.addRow();
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         String nsName = nameSetTextField.getText().trim();
@@ -207,6 +212,11 @@ public class NameSpaceDialog extends javax.swing.JDialog {
             nameSpace.getNameSet().remove(s);
         for (int i = 0; i < jTable1.getRowCount(); i++){
             String s = (String) jTable1.getValueAt(i, 0);
+            s = s.trim();
+            if (s.isEmpty()){
+                ErrorDialog.showErrorDialog("Пустая строка!", "Пустая строка №"+String.valueOf(i+1)+" пропущена!");
+                continue;
+            }
             if (!nameSpace.contains(s))
                 nameSpace.addName(s.trim());
         }
@@ -216,19 +226,56 @@ public class NameSpaceDialog extends javax.swing.JDialog {
 
     private int counter = 0;
     private String setName = new String();
+    
+    private static TreeSet<String> tableLinesSet = new TreeSet<>();
+    private void fillTableLinesSet(){
+        for (int i = 0; i < jTable1.getRowCount(); i++){
+            String s = ((String) jTable1.getValueAt(i, 0)).trim();
+            if (!s.isEmpty())
+                tableLinesSet.add(s);
+        }
+    }
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-        String randCount = randNameCountTextField.getText();
+        setName = nameSetTextField.getText().trim();
+        if (setName.isEmpty()){
+            ErrorDialog.showErrorDialog("Ошибка!", "Пустое имя словаря!");
+            return;
+        }
+        String randCount = randNameCountTextField.getText().trim();
         setName = nameSetTextField.getText().trim();
         int count = 0;
-        String regularExpression = regularExpressionTextField.getText().trim();
         try{count = Integer.valueOf(randCount.trim());}
         catch(NumberFormatException exc){}
+        if (count < 1){
+            ErrorDialog.showErrorDialog("Ошибка!", "Некорректное количество генерируемых имен!");
+            return;
+        }
+        String regularExpression = regularExpressionTextField.getText().trim();
+        if (regularExpression.isEmpty()){
+            ErrorDialog.showErrorDialog("Ошибка!", "Не введено регулярное выражение!");
+            return;
+        }
+        
+        fillTableLinesSet();
+        int tryCount;
         for (counter = 0; counter < count; counter++){
+            tryCount = 100;
             String randStr = getStrByRegularExpression(regularExpression);
+            while (tableLinesSet.contains(randStr) && tryCount >= 0 ){
+                randStr = getStrByRegularExpression(regularExpression);
+                tryCount--;
+            }
+            if (tryCount == -1){
+                ErrorDialog.showErrorDialog("Генерация прервана","Не удалось сгенерировать необходимое количество уникальных имен");
+                tableLinesSet.clear();
+                return;
+            }
             Object [] row = {randStr};
             myTableModel.addRow(row);
+            tableLinesSet.add(randStr);
         }
+        tableLinesSet.clear();
     }//GEN-LAST:event_jButton4ActionPerformed
     private String getStrByRegularExpression(String regExpr){
         String rtrn = regExpr+"";
@@ -253,6 +300,12 @@ public class NameSpaceDialog extends javax.swing.JDialog {
         }
         parseResult+=s;
         return parseResult;
+    }
+    
+    //нужна для проверки уникальности генерируемых имен, но пока заглушка
+    private TreeSet<String> actualNamesInTable = new TreeSet<>();
+    private boolean tableContentsThisStr(String s){
+        return actualNamesInTable.contains(s);
     }
     public static String getValueByAtomRegEx(String s){
         if (s.equals("%digit%"))

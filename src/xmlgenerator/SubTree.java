@@ -48,12 +48,14 @@ public class SubTree {
     public void setIncidentalAttributes(int minAttr, int maxAttr, String attrNameRegularExpr, String attrValueRegularExpr){
         int attrCount = getRandInt(minAttr, maxAttr);
         int attemptsToGetUniqueAttribute = 50;
+        String attrRegExWithLvl = attrNameRegularExpr.replace("%level%", String.valueOf(levelCounter));
+        String valRegExWithLvl = attrValueRegularExpr.replace("%level%", String.valueOf(levelCounter));
         for (int i=0; i < attrCount; i++){
             String attribute, value;
             if (!attrNameRegularExpr.isEmpty()){
-                attribute = getStringByRegularExpression(attrNameRegularExpr);
+                attribute = getStringByRegularExpression(attrRegExWithLvl);
                 while (attributes.containsKey(attribute) && attemptsToGetUniqueAttribute>0){
-                    attribute = getStringByRegularExpression(attrNameRegularExpr);
+                    attribute = getStringByRegularExpression(attrRegExWithLvl);
                     attemptsToGetUniqueAttribute--;
                 }
                 attemptsToGetUniqueAttribute = 50;
@@ -61,14 +63,16 @@ public class SubTree {
             else
                 attribute = "attr"+String.valueOf(i);
             if (!attrValueRegularExpr.isEmpty())
-                value = getStringByRegularExpression(attrValueRegularExpr);
+                value = getStringByRegularExpression(valRegExWithLvl);
             else 
                 value = "val"+String.valueOf(i);
             if (!attributes.containsKey(attribute))
                 attributes.put(attribute, value);
         }
         for (SubTree childNode : childNodes) {
+            levelCounter++;
             childNode.setIncidentalAttributes(minAttr, maxAttr, attrNameRegularExpr, attrValueRegularExpr);
+            levelCounter--;
         }
     }
     private static HashMap<String, ArrayList<String>> attrInAllLvls = new HashMap<>();
@@ -121,7 +125,7 @@ public class SubTree {
     }
     private static ArrayList<String> getNamesToUseAndCreateNewNSIfNeeded(String s){
         ArrayListForNames<String> rtrn = new ArrayListForNames<>();
-        String nsName = "";
+        String nsName;
         String countStr = "";
         int count = -1;
         String storageNameSpaceName = "";
@@ -364,12 +368,15 @@ public class SubTree {
         boolean hasChilds = getRandInt(minDepth, maxDepth) != 0;
         if (hasChilds){
             int childCount = getRandInt(minBranch, maxBranch);
+            levelCounter++;
             for (int i=0; i < childCount; i++){
                 String newTagName;
                 if (randomTagsRegEx.isEmpty())
                     newTagName = "tag" + String.valueOf(counter);
-                else 
-                    newTagName = getStringByRegularExpression(randomTagsRegEx);
+                else {
+                    String randomTagsRegExWithLvl = randomTagsRegEx.replace("%level%", String.valueOf(levelCounter));
+                    newTagName = getStringByRegularExpression(randomTagsRegExWithLvl);
+                }
                 SubTree child = new SubTree(newTagName);
                 if (globalMaxDepth == 0)
                     break;
@@ -378,6 +385,7 @@ public class SubTree {
                 child.fill(minDepth>0 ? minDepth-1:0, maxDepth-1, minBranch, maxBranch, randomTagsRegEx);
                 childNodes.add(child);
             }
+            levelCounter--;
         }
     }
     // до to включительно
@@ -465,6 +473,10 @@ public class SubTree {
         for (SubTree child: childNodes)
             rtrn.addChild(child.getCopy());
         return rtrn;
+    }
+
+    public void removeAllChilds() {
+        childNodes.clear();
     }
 
     

@@ -5,12 +5,12 @@
  */
 package GUI;
 
+
 /**
  *
  * @author Anatoly
  */
 public class ErrorDialog extends javax.swing.JDialog {
-
     /**
      * Creates new form errorDialog
      */
@@ -18,6 +18,24 @@ public class ErrorDialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(null);
+    }
+    public ErrorDialog(java.awt.Dialog parent, boolean modal){
+        super(parent, modal);
+        initComponents();
+        setLocationRelativeTo(null);
+    }
+    public ErrorDialog(String title, String errorMessage){
+        super((java.awt.Frame)null, true);
+        initComponents();
+        setLocationRelativeTo(null);
+        setTitle(title);
+        setErrorMessage(errorMessage);
+    }
+    public static void showErrorDialog(String errorMessage) {
+        new ErrorDialog("Ошибка!", errorMessage).setVisible(true);
+    }
+    public static void showErrorDialog(String title, String errorMessage){
+        new ErrorDialog(title, errorMessage).setVisible(true);
     }
     public void setErrorMessage(String errMess){
         errorMessageField.setText(errMess);
