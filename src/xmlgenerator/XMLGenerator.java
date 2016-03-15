@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package xmlgenerator;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -29,19 +31,12 @@ import org.xml.sax.SAXException;
  * @author Anatoly
  */
 public class XMLGenerator {
-    public static void save() throws ParserConfigurationException, SAXException, IOException{
-        DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        Document document = documentBuilder.newDocument();
-        document.appendChild(document.createElement("data"));
-        writeDocument(document);
-    }
     public static Document getDocument(String rootName) throws ParserConfigurationException{
         DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document document = documentBuilder.newDocument();
         document.appendChild(document.createElement(rootName));
         return document;
     }
-    
     private static ArrayList<String> foundTags = new ArrayList<>();
     public static ArrayList<Integer> getIntegers(String[] intervalsAndPoints){
         foundTags = new ArrayList<>();
@@ -90,15 +85,13 @@ public class XMLGenerator {
             rtrn = Integer.valueOf(selectedStr.trim());
         return rtrn;
     }
-    public static void writeDocument(Document document) {
-        try {
+    public static void writeDocument(String path,Document document) throws Exception {
+        
             Transformer tr = TransformerFactory.newInstance().newTransformer();
             DOMSource source = new DOMSource(document);
-            FileOutputStream fos = new FileOutputStream("other.xml");
+            FileOutputStream fos = new FileOutputStream(path);
             StreamResult result = new StreamResult(fos);
             tr.transform(source, result);
-        } catch (TransformerException | IOException e) {
-            e.printStackTrace(System.out);
-        }
+        
     }
 }

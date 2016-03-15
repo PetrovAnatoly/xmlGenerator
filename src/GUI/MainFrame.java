@@ -10,11 +10,15 @@ import GUI.Models.MyTagsTreeNode;
 import GUI.Models.NameSpaceNode;
 import GUI.Models.TagsTableModel;
 import GUI.Models.TextContentTableModel;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.JTree;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -892,16 +896,27 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         // TODO add your handling code here:
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(".xml","xml");
+        JFileChooser fc = new JFileChooser();
+        fc.setFileFilter(filter);
+        String absolutePath = null;
+        if ( fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION ) {
+            absolutePath = fc.getSelectedFile().getAbsolutePath();
+            if (!absolutePath.endsWith(".xml"))
+                absolutePath+=".xml";
+        }
+        if (absolutePath == null || absolutePath.isEmpty())
+            return;
         TreeSelectionModel TSM = tagsTree.getSelectionModel();
         TreePath TP = TSM.getSelectionPath();
         MyTagsTreeNode TC = (MyTagsTreeNode)TP.getLastPathComponent();
         SubTree selectedNode = TC.getAssociatedNode();
         try {
             Document xmlDoc = selectedNode.toDocument();
-            XMLGenerator.writeDocument(xmlDoc);
-        } catch (ParserConfigurationException ex) {
-            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            XMLGenerator.writeDocument(absolutePath ,xmlDoc);
+        } catch (Exception ex) {
+            ErrorDialog.showErrorDialog("Файл не удалось сохранить!");
+        } 
         pasteButton.setEnabled(false);
         tagCutIsPressed = false;
         tagCopyIsPressed = false;
