@@ -3,13 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Anatoly/Documents/NetBeansProjects/XMLGenerator/src/xmlgenerator/SubTree.java</file>
             <file>file:/C:/Users/Anatoly/Documents/NetBeansProjects/XMLGenerator/src/GUI/MainFrame.java</file>
-            <file>file:/C:/Users/Anatoly/Documents/NetBeansProjects/XMLGenerator/src/xmlgenerator/NameSpace.java</file>
             <file>file:/C:/Users/Anatoly/Documents/NetBeansProjects/XMLGenerator/src/GUI/NameSpaceDialog.java</file>
-            <file>file:/C:/Users/Anatoly/Documents/NetBeansProjects/XMLGenerator/src/xmlgenerator/XMLGenerator.java</file>
-            <file>file:/C:/Users/Anatoly/Documents/NetBeansProjects/XMLGenerator/src/GUI/ErrorDialog.java</file>
-            <file>file:/C:/Users/Anatoly/Documents/NetBeansProjects/XMLGenerator/src/xmlgenerator/ArrayListForNames.java</file>
+            <file>file:/C:/Users/Anatoly/Documents/NetBeansProjects/XMLGenerator/src/GUI/Models/AttributesTableModel.java</file>
         </group>
     </open-files>
 </project-private>

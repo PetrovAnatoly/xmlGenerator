@@ -112,7 +112,7 @@ public class MainFrame extends javax.swing.JFrame {
         selectedNodeTextArea = new javax.swing.JTextArea();
         geteratingIterationCountTextField = new javax.swing.JTextField();
         jLabel18 = new javax.swing.JLabel();
-        removeDescendantыButton = new javax.swing.JButton();
+        removeDescendantsButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1100, 550));
@@ -313,10 +313,10 @@ public class MainFrame extends javax.swing.JFrame {
 
         jLabel18.setText("Количество генераций:");
 
-        removeDescendantыButton.setText("Подтеги");
-        removeDescendantыButton.addActionListener(new java.awt.event.ActionListener() {
+        removeDescendantsButton.setText("Подтеги");
+        removeDescendantsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                removeDescendantыButtonActionPerformed(evt);
+                removeDescendantsButtonActionPerformed(evt);
             }
         });
 
@@ -335,7 +335,7 @@ public class MainFrame extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(removeDescendantыButton, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(removeDescendantsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(removeSubTreeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -534,7 +534,7 @@ public class MainFrame extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(removeSubTreeButton)
                                     .addComponent(removeTagButton)
-                                    .addComponent(removeDescendantыButton)))
+                                    .addComponent(removeDescendantsButton)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(15, 15, 15)
                                 .addComponent(nsCutButton)))
@@ -877,7 +877,7 @@ public class MainFrame extends javax.swing.JFrame {
             cutButton.setEnabled(false);
             selectedNodeTextArea.setText("this is a root");
             saveButton.setEnabled(true);
-            removeDescendantыButton.setEnabled(true);
+            removeDescendantsButton.setEnabled(true);
         }
         else {
             pasteButton.setEnabled(tagCutIsPressed || tagCopyIsPressed);
@@ -886,7 +886,7 @@ public class MainFrame extends javax.swing.JFrame {
             copyButton.setEnabled(true);
             cutButton.setEnabled(true);
             saveButton.setEnabled(true);
-            removeDescendantыButton.setEnabled(true);
+            removeDescendantsButton.setEnabled(true);
             selectedNodeTextArea.setText("");
             selectedNodeTextArea.append("\tTextContent: \n\"" + selectedNode.getTextContent() + "\"\n");
             selectedNodeTextArea.append("\tAttributes:\n");
@@ -1091,7 +1091,7 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_namespaceTreeMouseClicked
 
-    private void removeDescendantыButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeDescendantыButtonActionPerformed
+    private void removeDescendantsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeDescendantsButtonActionPerformed
         // TODO add your handling code here:
         TreeSelectionModel TSM = tagsTree.getSelectionModel();
         TreePath TP = TSM.getSelectionPath();
@@ -1104,7 +1104,7 @@ public class MainFrame extends javax.swing.JFrame {
         tagCopyIsPressed = false;
         tagCutIsPressed = false;
         selectedNodeTextArea.setText("");
-    }//GEN-LAST:event_removeDescendantыButtonActionPerformed
+    }//GEN-LAST:event_removeDescendantsButtonActionPerformed
     
     private SubTree root = new SubTree();
     public static NameSpace nsRoot = new NameSpace("names"); 
@@ -1144,7 +1144,7 @@ public class MainFrame extends javax.swing.JFrame {
         copyButton.setEnabled(false);
         cutButton.setEnabled(false);
         saveButton.setEnabled(false);
-        removeDescendantыButton.setEnabled(false);
+        removeDescendantsButton.setEnabled(false);
     }
     private void updateNameSpaceTree(){
         nsTreeRoot = getNameSpaceNode(nsRoot);
@@ -1247,7 +1247,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTextField randomAttributesRegExTextField;
     private javax.swing.JTextField randomAttributesValuesRegExTextField;
     private javax.swing.JTextField randomTagsRegExTextField;
-    private javax.swing.JButton removeDescendantыButton;
+    private javax.swing.JButton removeDescendantsButton;
     private javax.swing.JButton removeSubTreeButton;
     private javax.swing.JButton removeTagButton;
     private javax.swing.JTextField rootTagRegExTextField;
